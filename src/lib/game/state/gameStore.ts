@@ -157,7 +157,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   
   selectedBuildingType: null,
   selectedBuildingId: null,
-  cameraPosition: { x: 25, y: 35, z: 40 },
+  cameraPosition: { x: 25, y: 15, z: 35 },
   cameraRotation: 0,
   cameraZoom: 10,
   

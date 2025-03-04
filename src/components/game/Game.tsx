@@ -33,12 +33,12 @@ function CameraController() {
     }
   }, []);
   
-  // Update camera position when state changes
+  // Update camera position when state changes from keyboard movement
   useEffect(() => {
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
     
-    // Update orbit controls target to be in front of the camera
     if (controlsRef.current) {
+      // Update the target to be in front of the camera
       const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
       const target = new THREE.Vector3(
         cameraPosition.x + direction.x * 10,
@@ -46,8 +46,52 @@ function CameraController() {
         cameraPosition.z + direction.z * 10
       );
       controlsRef.current.target.copy(target);
+      controlsRef.current.update();
     }
   }, [cameraPosition, camera]);
+  
+  // Sync the camera position from OrbitControls back to our state
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    
+    const controls = controlsRef.current;
+    
+    // Create a callback for when orbit controls changes the camera
+    const handleControlChange = () => {
+      // Only update our state if the position has changed significantly
+      // to avoid feedback loops
+      const currentPos = {
+        x: Math.round(camera.position.x * 10) / 10,
+        y: Math.round(camera.position.y * 10) / 10,
+        z: Math.round(camera.position.z * 10) / 10
+      };
+      
+      const storePos = {
+        x: Math.round(cameraPosition.x * 10) / 10,
+        y: Math.round(cameraPosition.y * 10) / 10,
+        z: Math.round(cameraPosition.z * 10) / 10
+      };
+      
+      if (
+        currentPos.x !== storePos.x ||
+        currentPos.y !== storePos.y ||
+        currentPos.z !== storePos.z
+      ) {
+        updateCamera({
+          x: camera.position.x,
+          y: camera.position.y,
+          z: camera.position.z
+        });
+      }
+    };
+    
+    // Add the change event listener
+    controls.addEventListener('change', handleControlChange);
+    
+    return () => {
+      controls.removeEventListener('change', handleControlChange);
+    };
+  }, [camera, cameraPosition, updateCamera]);
   
   // Handle keyboard navigation (WASD + Space/Shift for up/down)
   useEffect(() => {
@@ -166,8 +210,8 @@ function CameraController() {
       enableDamping={true}
       dampingFactor={0.1}
       rotateSpeed={0.5}
-      zoomSpeed={1.0} // Increased zoom speed
-      panSpeed={0.8} // Increased pan speed
+      zoomSpeed={1.0}
+      panSpeed={0.8}
       minDistance={5}
       maxDistance={200}
       minPolarAngle={0}
@@ -193,7 +237,7 @@ export default function Game() {
     initializeGame(playerName, kingdomName);
     
     // Ensure camera is properly positioned at game start
-    updateCamera({ x: 25, y: 35, z: 40 });
+    updateCamera({ x: 25, y: 15, z: 35 });
     
     setGameStarted(true);
   };
