@@ -5,10 +5,6 @@ import { TerrainType, TERRAIN } from '../models/terrain';
 export interface GameResources {
   cash: number;
   data_tokens: number;
-  silicon: number;
-  hardware: number;
-  energy: number;
-  computing_power: number;
 }
 
 export interface GameStats {
@@ -18,7 +14,6 @@ export interface GameStats {
   security: number;
   income: number;
   upkeep: number;
-  processing_power: number;
 }
 
 export interface PlacedBuilding {
@@ -140,10 +135,6 @@ export const useGameStore = create<GameState>((set, get) => ({
   resources: {
     cash: 1000, // Start with 1000 cash
     data_tokens: 5000,
-    silicon: 1000,
-    hardware: 500,
-    energy: 200,
-    computing_power: 1000,
   },
   
   stats: {
@@ -153,7 +144,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     security: 10,
     income: 10,
     upkeep: 5,
-    processing_power: 1,
   },
   
   mapSize: { width: 50, height: 50 },
@@ -209,38 +199,19 @@ export const useGameStore = create<GameState>((set, get) => ({
     const { resources, stats, buildings } = get();
     
     // Calculate resource generation from buildings
-    let siliconIncome = 0;
-    let hardwareIncome = 0;
-    let energyIncome = 0;
     let dataTokensIncome = stats.income;
-    let computingPowerIncome = 0;
     
     // Loop through all buildings to calculate resource generation
     buildings.forEach(building => {
       const buildingData = require('../models/buildings').BUILDINGS[building.type];
-      if (buildingData.provides?.resources) {
-        const { resources } = buildingData.provides;
-        siliconIncome += resources.silicon || 0;
-        hardwareIncome += resources.hardware || 0;
-        energyIncome += resources.energy || 0;
-      }
-      
       if (buildingData.income) {
         dataTokensIncome += buildingData.income;
-      }
-      
-      if (buildingData.provides?.computing_power) {
-        computingPowerIncome += buildingData.provides.computing_power;
       }
     });
     
     // Update resources
     const newResources = { ...resources };
     newResources.data_tokens += dataTokensIncome;
-    newResources.silicon += siliconIncome;
-    newResources.hardware += hardwareIncome;
-    newResources.energy += energyIncome;
-    newResources.computing_power += computingPowerIncome;
     
     set({
       resources: newResources,
@@ -255,7 +226,6 @@ export const useGameStore = create<GameState>((set, get) => ({
         level: newLevel,
         stats: {
           ...stats,
-          processing_power: newLevel,
         }
       });
     }
@@ -284,10 +254,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     // Check if we have enough resources (skip check for headquarters as it's the starter building)
     if (type !== BuildingType.HEADQUARTERS && (
       resources.cash < (buildingData.cost.cash || 0) ||
-      resources.data_tokens < (buildingData.cost.data_tokens || 0) ||
-      resources.silicon < (buildingData.cost.silicon || 0) ||
-      resources.hardware < (buildingData.cost.hardware || 0) ||
-      resources.energy < (buildingData.cost.energy || 0)
+      resources.data_tokens < (buildingData.cost.data_tokens || 0)
     )) {
       console.log('Not enough resources');
       return;
@@ -324,9 +291,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (type !== BuildingType.HEADQUARTERS) {
       newResources.cash -= buildingData.cost.cash || 0;
       newResources.data_tokens -= buildingData.cost.data_tokens || 0;
-      newResources.silicon -= buildingData.cost.silicon || 0;
-      newResources.hardware -= buildingData.cost.hardware || 0;
-      newResources.energy -= buildingData.cost.energy || 0;
     }
     
     // Generate unique ID

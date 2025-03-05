@@ -139,22 +139,6 @@ export default function GameUI() {
               <span>Data Tokens:</span>
               <span className="text-yellow-300">{resources.data_tokens}</span>
             </div>
-            <div className="flex justify-between">
-              <span>Silicon:</span>
-              <span className="text-green-300">{resources.silicon}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Hardware:</span>
-              <span className="text-gray-300">{resources.hardware}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Energy:</span>
-              <span className="text-blue-300">{resources.energy}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Computing Power:</span>
-              <span className="text-red-300">{resources.computing_power}</span>
-            </div>
           </div>
           
           <h3 className="font-bold mt-4 mb-2 text-blue-400">Company Stats</h3>
@@ -182,10 +166,6 @@ export default function GameUI() {
             <div className="flex justify-between">
               <span>Upkeep:</span>
               <span className="text-red-300">-{stats.upkeep}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Processing Power:</span>
-              <span className="text-purple-300">{stats.processing_power}</span>
             </div>
           </div>
         </div>
@@ -230,10 +210,7 @@ export default function GameUI() {
               const isSelected = selectedBuildingType === building.type;
               const canAfford = 
                 resources.cash >= (building.cost.cash || 0) &&
-                resources.data_tokens >= (building.cost.data_tokens || 0) &&
-                resources.silicon >= (building.cost.silicon || 0) &&
-                resources.hardware >= (building.cost.hardware || 0) &&
-                resources.energy >= (building.cost.energy || 0);
+                resources.data_tokens >= (building.cost.data_tokens || 0);
               
               return (
                 <button
@@ -251,7 +228,7 @@ export default function GameUI() {
                   <div className="font-medium">{building.name}</div>
                   <div className="text-xs text-blue-200 mt-1">{building.description}</div>
                   
-                  <div className="mt-2 text-xs grid grid-cols-2 gap-x-2">
+                  <div className="text-xs mt-1 space-y-1">
                     {building.cost.cash > 0 && (
                       <div className="flex items-center">
                         <span className="text-green-400 mr-1">$</span>
@@ -266,21 +243,6 @@ export default function GameUI() {
                         Data: {building.cost.data_tokens}
                       </div>
                     )}
-                    {building.cost.silicon > 0 && (
-                      <div className={resources.silicon >= building.cost.silicon ? 'text-green-300' : 'text-red-400'}>
-                        Silicon: {building.cost.silicon}
-                      </div>
-                    )}
-                    {building.cost.hardware > 0 && (
-                      <div className={resources.hardware >= building.cost.hardware ? 'text-gray-300' : 'text-red-400'}>
-                        Hardware: {building.cost.hardware}
-                      </div>
-                    )}
-                    {building.cost.energy > 0 && (
-                      <div className={resources.energy >= building.cost.energy ? 'text-blue-300' : 'text-red-400'}>
-                        Energy: {building.cost.energy}
-                      </div>
-                    )}
                   </div>
                 </button>
               );
@@ -292,17 +254,13 @@ export default function GameUI() {
       {/* Selected building info */}
       {selectedBuilding && (
         <div className="absolute bottom-16 right-0 bg-slate-800/90 text-blue-100 p-3 rounded-tl-lg pointer-events-auto w-64">
-          <h3 className="font-bold mb-2 text-blue-400">
-            {BUILDINGS[selectedBuilding.type].name}
-          </h3>
-          <p className="text-sm mb-3">
-            {BUILDINGS[selectedBuilding.type].description}
-          </p>
+          <h3 className="font-bold mb-2 text-blue-400">{BUILDINGS[selectedBuilding.type].name}</h3>
+          <p className="text-sm">{BUILDINGS[selectedBuilding.type].description}</p>
           
           {BUILDINGS[selectedBuilding.type].provides && (
-            <div className="text-xs">
+            <div className="mt-3">
               <h4 className="font-medium text-blue-300 mb-1">Provides:</h4>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+              <div className="grid grid-cols-2 gap-x-2 text-sm">
                 {BUILDINGS[selectedBuilding.type].provides.employees && (
                   <div>Employees: +{BUILDINGS[selectedBuilding.type].provides.employees}</div>
                 )}
@@ -312,31 +270,19 @@ export default function GameUI() {
                 {BUILDINGS[selectedBuilding.type].provides.security && (
                   <div>Security: +{BUILDINGS[selectedBuilding.type].provides.security}</div>
                 )}
-                {BUILDINGS[selectedBuilding.type].provides.computing_power && (
-                  <div>Computing: +{BUILDINGS[selectedBuilding.type].provides.computing_power}</div>
-                )}
-                {BUILDINGS[selectedBuilding.type].provides.resources?.silicon && (
-                  <div className="text-green-300">Silicon: +{BUILDINGS[selectedBuilding.type].provides.resources.silicon}</div>
-                )}
-                {BUILDINGS[selectedBuilding.type].provides.resources?.hardware && (
-                  <div className="text-gray-300">Hardware: +{BUILDINGS[selectedBuilding.type].provides.resources.hardware}</div>
-                )}
-                {BUILDINGS[selectedBuilding.type].provides.resources?.energy && (
-                  <div className="text-blue-300">Energy: +{BUILDINGS[selectedBuilding.type].provides.resources.energy}</div>
-                )}
               </div>
             </div>
           )}
           
           {BUILDINGS[selectedBuilding.type].income > 0 && (
-            <div className="text-xs mt-2">
-              <span className="text-blue-300">Income:</span> <span className="text-green-300">+{BUILDINGS[selectedBuilding.type].income} data tokens</span>
+            <div className="mt-2 text-sm">
+              <span className="text-blue-300">Income:</span> +{BUILDINGS[selectedBuilding.type].income} data tokens
             </div>
           )}
           
           {BUILDINGS[selectedBuilding.type].upkeep > 0 && (
-            <div className="text-xs mt-1">
-              <span className="text-blue-300">Upkeep:</span> <span className="text-red-300">-{BUILDINGS[selectedBuilding.type].upkeep} data tokens</span>
+            <div className="mt-2 text-sm">
+              <span className="text-blue-300">Upkeep:</span> -{BUILDINGS[selectedBuilding.type].upkeep} data tokens
             </div>
           )}
         </div>

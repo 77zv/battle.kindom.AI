@@ -21,9 +21,6 @@ export interface BuildingData {
   cost: {
     cash: number;
     data_tokens?: number;
-    silicon?: number;
-    hardware?: number;
-    energy?: number;
   };
   size: {
     width: number;
@@ -37,20 +34,9 @@ export interface BuildingData {
     employees?: number;
     satisfaction?: number;
     security?: number;
-    computing_power?: number;
-    resources?: {
-      silicon?: number;
-      hardware?: number;
-      energy?: number;
-    };
   };
   requires?: {
     buildings?: BuildingType[];
-    resources?: {
-      silicon?: number;
-      hardware?: number;
-      energy?: number;
-    };
   };
 }
 
@@ -62,8 +48,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 0,
       data_tokens: 1000,
-      hardware: 500,
-      silicon: 300,
     },
     size: {
       width: 5,
@@ -84,7 +68,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 500,
       data_tokens: 50,
-      silicon: 20,
     },
     size: {
       width: 1,
@@ -103,7 +86,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 1000,
       data_tokens: 100,
-      silicon: 30,
     },
     size: {
       width: 2,
@@ -113,7 +95,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 10,
     unlockLevel: 1,
     provides: {
-      computing_power: 20,
     },
   },
   [BuildingType.RESEARCH_LAB]: {
@@ -123,9 +104,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 2000,
       data_tokens: 200,
-      silicon: 50,
-      hardware: 30,
-      energy: 20,
     },
     size: {
       width: 2,
@@ -148,7 +126,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 3000,
       data_tokens: 300,
-      silicon: 100,
     },
     size: {
       width: 3,
@@ -171,7 +148,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 2500,
       data_tokens: 250,
-      silicon: 80,
     },
     size: {
       width: 2,
@@ -194,8 +170,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 5000,
       data_tokens: 400,
-      hardware: 200,
-      silicon: 100,
     },
     size: {
       width: 3,
@@ -217,8 +191,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 4000,
       data_tokens: 350,
-      silicon: 150,
-      hardware: 50,
     },
     size: {
       width: 3,
@@ -241,7 +213,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 1500,
       data_tokens: 100,
-      hardware: 50,
     },
     size: {
       width: 1,
@@ -260,8 +231,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 2000,
       data_tokens: 200,
-      hardware: 100,
-      energy: 30,
     },
     size: {
       width: 1,
@@ -271,7 +240,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     unlockLevel: 2,
     provides: {
       security: 15,
-      computing_power: 10,
     },
   },
   [BuildingType.DATA_MINE]: {
@@ -281,8 +249,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 3000,
       data_tokens: 300,
-      silicon: 100,
-      energy: 50,
     },
     size: {
       width: 2,
@@ -292,9 +258,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 20,
     unlockLevel: 2,
     provides: {
-      resources: {
-        energy: 5,
-      },
     },
     requires: {
       buildings: [BuildingType.DATA_CENTER],
@@ -307,8 +270,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 2500,
       data_tokens: 250,
-      hardware: 120,
-      energy: 40,
     },
     size: {
       width: 2,
@@ -317,8 +278,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 15,
     unlockLevel: 3,
     provides: {
-      computing_power: 15,
-      security: 5,
     },
     requires: {
       buildings: [BuildingType.DATA_CENTER],
@@ -331,9 +290,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     cost: {
       cash: 10000,
       data_tokens: 500,
-      silicon: 200,
-      hardware: 150,
-      energy: 100,
     },
     size: {
       width: 4,
@@ -343,11 +299,6 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 30,
     unlockLevel: 4,
     provides: {
-      resources: {
-        hardware: 10,
-        energy: 15,
-      },
-      employees: 20,
     },
     requires: {
       buildings: [BuildingType.RESEARCH_LAB, BuildingType.DATA_MINE],
