@@ -1,17 +1,17 @@
 export enum BuildingType {
-  CASTLE = 'castle',
-  HOUSE = 'house',
-  FARM = 'farm',
-  BLACKSMITH = 'blacksmith',
-  MARKET = 'market',
-  TAVERN = 'tavern',
-  CHURCH = 'church',
-  BARRACKS = 'barracks',
-  WALL = 'wall',
-  TOWER = 'tower',
-  MINE = 'mine',
-  MILL = 'mill',
-  STABLE = 'stable',
+  HEADQUARTERS = 'headquarters',
+  OFFICE = 'office',
+  DATA_CENTER = 'data_center',
+  RESEARCH_LAB = 'research_lab',
+  TECH_HUB = 'tech_hub',
+  CAFETERIA = 'cafeteria',
+  INNOVATION_CENTER = 'innovation_center',
+  NETWORKING_EVENT = 'networking_event',
+  FIREWALL = 'firewall',
+  SERVER_TOWER = 'server_tower',
+  DATA_MINE = 'data_mine',
+  CLOUD_STORAGE = 'cloud_storage',
+  TESLA_GIGAFACTORY = 'tesla_gigafactory',
 }
 
 export interface BuildingData {
@@ -19,10 +19,10 @@ export interface BuildingData {
   name: string;
   description: string;
   cost: {
-    gold: number;
-    wood?: number;
-    stone?: number;
-    iron?: number;
+    data_tokens: number;
+    silicon?: number;
+    hardware?: number;
+    energy?: number;
   };
   size: {
     width: number;
@@ -33,35 +33,35 @@ export interface BuildingData {
   buildTime: number;
   unlockLevel: number;
   provides?: {
-    housing?: number;
-    happiness?: number;
-    defense?: number;
-    food?: number;
+    employees?: number;
+    satisfaction?: number;
+    security?: number;
+    computing_power?: number;
     resources?: {
-      wood?: number;
-      stone?: number;
-      iron?: number;
+      silicon?: number;
+      hardware?: number;
+      energy?: number;
     };
   };
   requires?: {
     buildings?: BuildingType[];
     resources?: {
-      wood?: number;
-      stone?: number;
-      iron?: number;
+      silicon?: number;
+      hardware?: number;
+      energy?: number;
     };
   };
 }
 
 export const BUILDINGS: Record<BuildingType, BuildingData> = {
-  [BuildingType.CASTLE]: {
-    type: BuildingType.CASTLE,
-    name: 'Castle',
-    description: 'The center of your kingdom',
+  [BuildingType.HEADQUARTERS]: {
+    type: BuildingType.HEADQUARTERS,
+    name: 'Corporate Headquarters',
+    description: 'The center of your tech empire',
     cost: {
-      gold: 1000,
-      stone: 500,
-      wood: 300,
+      data_tokens: 1000,
+      hardware: 500,
+      silicon: 300,
     },
     size: {
       width: 5,
@@ -70,18 +70,18 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 60,
     unlockLevel: 1,
     provides: {
-      housing: 10,
-      happiness: 20,
-      defense: 50,
+      employees: 10,
+      satisfaction: 20,
+      security: 50,
     },
   },
-  [BuildingType.HOUSE]: {
-    type: BuildingType.HOUSE,
-    name: 'House',
-    description: 'Basic housing for your peasants',
+  [BuildingType.OFFICE]: {
+    type: BuildingType.OFFICE,
+    name: 'Open Office Space',
+    description: 'Basic workspace for your employees',
     cost: {
-      gold: 50,
-      wood: 20,
+      data_tokens: 50,
+      silicon: 20,
     },
     size: {
       width: 1,
@@ -90,16 +90,16 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 5,
     unlockLevel: 1,
     provides: {
-      housing: 5,
+      employees: 5,
     },
   },
-  [BuildingType.FARM]: {
-    type: BuildingType.FARM,
-    name: 'Farm',
-    description: 'Produces food for your kingdom',
+  [BuildingType.DATA_CENTER]: {
+    type: BuildingType.DATA_CENTER,
+    name: 'Data Center',
+    description: 'Processes data and increases computing power',
     cost: {
-      gold: 100,
-      wood: 30,
+      data_tokens: 100,
+      silicon: 30,
     },
     size: {
       width: 2,
@@ -109,18 +109,18 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 10,
     unlockLevel: 1,
     provides: {
-      food: 20,
+      computing_power: 20,
     },
   },
-  [BuildingType.BLACKSMITH]: {
-    type: BuildingType.BLACKSMITH,
-    name: 'Blacksmith',
-    description: 'Crafts weapons and tools',
+  [BuildingType.RESEARCH_LAB]: {
+    type: BuildingType.RESEARCH_LAB,
+    name: 'Research Lab',
+    description: 'Develops new technologies and algorithms',
     cost: {
-      gold: 200,
-      wood: 50,
-      stone: 30,
-      iron: 20,
+      data_tokens: 200,
+      silicon: 50,
+      hardware: 30,
+      energy: 20,
     },
     size: {
       width: 2,
@@ -130,19 +130,19 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 15,
     unlockLevel: 2,
     provides: {
-      happiness: 5,
+      satisfaction: 5,
     },
     requires: {
-      buildings: [BuildingType.HOUSE],
+      buildings: [BuildingType.OFFICE],
     },
   },
-  [BuildingType.MARKET]: {
-    type: BuildingType.MARKET,
-    name: 'Market',
-    description: 'Trade goods and increase income',
+  [BuildingType.TECH_HUB]: {
+    type: BuildingType.TECH_HUB,
+    name: 'Tech Hub',
+    description: 'Exchange innovations and increase income',
     cost: {
-      gold: 300,
-      wood: 100,
+      data_tokens: 300,
+      silicon: 100,
     },
     size: {
       width: 3,
@@ -152,19 +152,19 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 20,
     unlockLevel: 2,
     provides: {
-      happiness: 10,
+      satisfaction: 10,
     },
     requires: {
-      buildings: [BuildingType.HOUSE, BuildingType.FARM],
+      buildings: [BuildingType.OFFICE, BuildingType.DATA_CENTER],
     },
   },
-  [BuildingType.TAVERN]: {
-    type: BuildingType.TAVERN,
-    name: 'Tavern',
-    description: 'Keeps your citizens happy',
+  [BuildingType.CAFETERIA]: {
+    type: BuildingType.CAFETERIA,
+    name: 'Gourmet Cafeteria',
+    description: 'Keeps your employees happy with free food',
     cost: {
-      gold: 250,
-      wood: 80,
+      data_tokens: 250,
+      silicon: 80,
     },
     size: {
       width: 2,
@@ -174,20 +174,20 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 15,
     unlockLevel: 2,
     provides: {
-      happiness: 15,
+      satisfaction: 15,
     },
     requires: {
-      buildings: [BuildingType.HOUSE],
+      buildings: [BuildingType.OFFICE],
     },
   },
-  [BuildingType.CHURCH]: {
-    type: BuildingType.CHURCH,
-    name: 'Church',
-    description: 'Provides spiritual guidance',
+  [BuildingType.INNOVATION_CENTER]: {
+    type: BuildingType.INNOVATION_CENTER,
+    name: 'Innovation Center',
+    description: 'Fosters creativity and breakthrough ideas',
     cost: {
-      gold: 400,
-      stone: 200,
-      wood: 100,
+      data_tokens: 400,
+      hardware: 200,
+      silicon: 100,
     },
     size: {
       width: 3,
@@ -196,20 +196,20 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 30,
     unlockLevel: 3,
     provides: {
-      happiness: 20,
+      satisfaction: 20,
     },
     requires: {
-      buildings: [BuildingType.HOUSE, BuildingType.MARKET],
+      buildings: [BuildingType.OFFICE, BuildingType.TECH_HUB],
     },
   },
-  [BuildingType.BARRACKS]: {
-    type: BuildingType.BARRACKS,
-    name: 'Barracks',
-    description: 'Trains soldiers to defend your kingdom',
+  [BuildingType.NETWORKING_EVENT]: {
+    type: BuildingType.NETWORKING_EVENT,
+    name: 'Networking Event Center',
+    description: 'Recruits and trains new talent for your company',
     cost: {
-      gold: 350,
-      wood: 150,
-      stone: 50,
+      data_tokens: 350,
+      silicon: 150,
+      hardware: 50,
     },
     size: {
       width: 3,
@@ -219,19 +219,19 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 25,
     unlockLevel: 3,
     provides: {
-      defense: 30,
+      security: 30,
     },
     requires: {
-      buildings: [BuildingType.BLACKSMITH],
+      buildings: [BuildingType.RESEARCH_LAB],
     },
   },
-  [BuildingType.WALL]: {
-    type: BuildingType.WALL,
-    name: 'Wall',
-    description: 'Defends your kingdom from invaders',
+  [BuildingType.FIREWALL]: {
+    type: BuildingType.FIREWALL,
+    name: 'Firewall',
+    description: 'Protects your network from cyber attacks',
     cost: {
-      gold: 100,
-      stone: 50,
+      data_tokens: 100,
+      hardware: 50,
     },
     size: {
       width: 1,
@@ -240,94 +240,103 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     buildTime: 5,
     unlockLevel: 2,
     provides: {
-      defense: 10,
+      security: 10,
     },
   },
-  [BuildingType.TOWER]: {
-    type: BuildingType.TOWER,
-    name: 'Tower',
-    description: 'Provides lookout and defense',
+  [BuildingType.SERVER_TOWER]: {
+    type: BuildingType.SERVER_TOWER,
+    name: 'Server Tower',
+    description: 'Provides additional computing power and security',
     cost: {
-      gold: 200,
-      stone: 100,
-      wood: 50,
+      data_tokens: 200,
+      hardware: 100,
+      energy: 30,
     },
     size: {
       width: 1,
       length: 1,
     },
-    buildTime: 15,
-    unlockLevel: 3,
+    buildTime: 10,
+    unlockLevel: 2,
     provides: {
-      defense: 20,
-    },
-    requires: {
-      buildings: [BuildingType.WALL],
+      security: 15,
+      computing_power: 10,
     },
   },
-  [BuildingType.MINE]: {
-    type: BuildingType.MINE,
-    name: 'Mine',
-    description: 'Extracts stone and iron',
+  [BuildingType.DATA_MINE]: {
+    type: BuildingType.DATA_MINE,
+    name: 'Data Mine',
+    description: 'Extracts valuable user data to generate Data Tokens',
     cost: {
-      gold: 300,
-      wood: 100,
+      data_tokens: 300,
+      silicon: 100,
+      energy: 50,
     },
     size: {
       width: 2,
       length: 2,
     },
+    income: 25,
     buildTime: 20,
     unlockLevel: 2,
     provides: {
       resources: {
-        stone: 10,
-        iron: 5,
+        energy: 5,
       },
     },
+    requires: {
+      buildings: [BuildingType.DATA_CENTER],
+    },
   },
-  [BuildingType.MILL]: {
-    type: BuildingType.MILL,
-    name: 'Mill',
-    description: 'Processes grain into flour',
+  [BuildingType.CLOUD_STORAGE]: {
+    type: BuildingType.CLOUD_STORAGE,
+    name: 'Cloud Storage Facility',
+    description: 'Stores and processes large amounts of data',
     cost: {
-      gold: 200,
-      wood: 80,
-      stone: 30,
+      data_tokens: 250,
+      hardware: 120,
+      energy: 40,
     },
     size: {
       width: 2,
       length: 2,
     },
-    income: 15,
     buildTime: 15,
-    unlockLevel: 2,
-    provides: {
-      food: 10,
-    },
-    requires: {
-      buildings: [BuildingType.FARM],
-    },
-  },
-  [BuildingType.STABLE]: {
-    type: BuildingType.STABLE,
-    name: 'Stable',
-    description: 'Houses horses for knights and transportation',
-    cost: {
-      gold: 250,
-      wood: 100,
-    },
-    size: {
-      width: 2,
-      length: 3,
-    },
-    buildTime: 20,
     unlockLevel: 3,
     provides: {
-      happiness: 5,
+      computing_power: 15,
+      security: 5,
     },
     requires: {
-      buildings: [BuildingType.FARM],
+      buildings: [BuildingType.DATA_CENTER],
+    },
+  },
+  [BuildingType.TESLA_GIGAFACTORY]: {
+    type: BuildingType.TESLA_GIGAFACTORY,
+    name: 'Tesla Gigafactory',
+    description: 'Massive production facility for hardware and energy',
+    cost: {
+      data_tokens: 500,
+      silicon: 200,
+      hardware: 150,
+      energy: 100,
+    },
+    size: {
+      width: 4,
+      length: 4,
+    },
+    income: 40,
+    buildTime: 30,
+    unlockLevel: 4,
+    provides: {
+      resources: {
+        hardware: 10,
+        energy: 15,
+      },
+      employees: 20,
+    },
+    requires: {
+      buildings: [BuildingType.RESEARCH_LAB, BuildingType.DATA_MINE],
     },
   },
 }; 

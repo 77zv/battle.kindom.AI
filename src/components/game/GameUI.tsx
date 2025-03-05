@@ -10,7 +10,7 @@ export default function GameUI() {
   const [showControls, setShowControls] = useState(false);
   
   const playerName = useGameStore(state => state.playerName);
-  const kingdomName = useGameStore(state => state.kingdomName);
+  const companyName = useGameStore(state => state.companyName);
   const day = useGameStore(state => state.day);
   const level = useGameStore(state => state.level);
   const resources = useGameStore(state => state.resources);
@@ -36,9 +36,9 @@ export default function GameUI() {
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Top bar with resources */}
-      <div className="absolute top-0 left-0 right-0 bg-stone-800/80 text-amber-100 p-2 flex justify-between items-center pointer-events-auto">
+      <div className="absolute top-0 left-0 right-0 bg-slate-800/80 text-blue-100 p-2 flex justify-between items-center pointer-events-auto">
         <div className="flex items-center space-x-4">
-          <div className="font-bold">{kingdomName}</div>
+          <div className="font-bold">{companyName}</div>
           <div>Day: {day}</div>
           <div>Level: {level}</div>
         </div>
@@ -46,13 +46,13 @@ export default function GameUI() {
         <div className="flex space-x-2">
           <button 
             onClick={() => setShowControls(!showControls)}
-            className="px-2 py-1 bg-stone-700 hover:bg-stone-600 rounded text-sm"
+            className="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm"
           >
             {showControls ? 'Hide Controls' : 'Controls'}
           </button>
           <button 
             onClick={() => setShowResourcesMenu(!showResourcesMenu)}
-            className="px-2 py-1 bg-amber-700 hover:bg-amber-800 rounded text-sm"
+            className="px-2 py-1 bg-blue-700 hover:bg-blue-800 rounded text-sm"
           >
             {showResourcesMenu ? 'Hide Resources' : 'Show Resources'}
           </button>
@@ -61,8 +61,8 @@ export default function GameUI() {
       
       {/* Controls help panel */}
       {showControls && (
-        <div className="absolute top-12 left-0 bg-stone-800/80 text-amber-100 p-3 rounded-br-lg pointer-events-auto">
-          <h3 className="font-bold mb-2 text-amber-400">Controls</h3>
+        <div className="absolute top-12 left-0 bg-slate-800/80 text-blue-100 p-3 rounded-br-lg pointer-events-auto">
+          <h3 className="font-bold mb-2 text-blue-400">Controls</h3>
           <div className="text-sm space-y-1">
             <div className="flex items-center">
               <span className="w-36">↑ or W</span>
@@ -81,20 +81,16 @@ export default function GameUI() {
               <span>Move Right</span>
             </div>
             <div className="flex items-center">
-              <span className="w-36">Space</span>
+              <span className="w-36">Q</span>
               <span>Move Up</span>
             </div>
             <div className="flex items-center">
-              <span className="w-36">Shift</span>
+              <span className="w-36">E</span>
               <span>Move Down</span>
             </div>
             <div className="flex items-center">
-              <span className="w-36">Left Mouse</span>
-              <span>Rotate Camera</span>
-            </div>
-            <div className="flex items-center">
               <span className="w-36">Right Mouse</span>
-              <span>Pan Camera</span>
+              <span>Rotate Camera</span>
             </div>
             <div className="flex items-center">
               <span className="w-36">Mouse Wheel</span>
@@ -110,44 +106,44 @@ export default function GameUI() {
       
       {/* Resources panel */}
       {showResourcesMenu && (
-        <div className="absolute top-12 right-0 bg-stone-800/80 text-amber-100 p-3 rounded-bl-lg pointer-events-auto">
-          <h3 className="font-bold mb-2 text-amber-400">Resources</h3>
+        <div className="absolute top-12 right-0 bg-slate-800/80 text-blue-100 p-3 rounded-bl-lg pointer-events-auto">
+          <h3 className="font-bold mb-2 text-blue-400">Resources</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
             <div className="flex justify-between">
-              <span>Gold:</span>
-              <span className="text-yellow-300">{resources.gold}</span>
+              <span>Data Tokens:</span>
+              <span className="text-yellow-300">{resources.data_tokens}</span>
             </div>
             <div className="flex justify-between">
-              <span>Wood:</span>
-              <span className="text-green-300">{resources.wood}</span>
+              <span>Silicon:</span>
+              <span className="text-green-300">{resources.silicon}</span>
             </div>
             <div className="flex justify-between">
-              <span>Stone:</span>
-              <span className="text-gray-300">{resources.stone}</span>
+              <span>Hardware:</span>
+              <span className="text-gray-300">{resources.hardware}</span>
             </div>
             <div className="flex justify-between">
-              <span>Iron:</span>
-              <span className="text-blue-300">{resources.iron}</span>
+              <span>Energy:</span>
+              <span className="text-blue-300">{resources.energy}</span>
             </div>
             <div className="flex justify-between">
-              <span>Food:</span>
-              <span className="text-red-300">{resources.food}</span>
+              <span>Computing Power:</span>
+              <span className="text-red-300">{resources.computing_power}</span>
             </div>
           </div>
           
-          <h3 className="font-bold mt-4 mb-2 text-amber-400">Kingdom Stats</h3>
+          <h3 className="font-bold mt-4 mb-2 text-blue-400">Company Stats</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
             <div className="flex justify-between">
-              <span>Population:</span>
-              <span>{stats.population}/{stats.populationCapacity}</span>
+              <span>Employees:</span>
+              <span>{stats.employees}/{stats.employeeCapacity}</span>
             </div>
             <div className="flex justify-between">
-              <span>Happiness:</span>
-              <span>{stats.happiness}%</span>
+              <span>Satisfaction:</span>
+              <span>{stats.satisfaction}%</span>
             </div>
             <div className="flex justify-between">
-              <span>Defense:</span>
-              <span>{stats.defense}</span>
+              <span>Security:</span>
+              <span>{stats.security}</span>
             </div>
             <div className="flex justify-between">
               <span>Income:</span>
@@ -157,16 +153,20 @@ export default function GameUI() {
               <span>Upkeep:</span>
               <span className="text-red-300">-{stats.upkeep}</span>
             </div>
+            <div className="flex justify-between">
+              <span>Processing Power:</span>
+              <span className="text-purple-300">{stats.processing_power}</span>
+            </div>
           </div>
         </div>
       )}
       
       {/* Bottom bar with actions */}
-      <div className="absolute bottom-0 left-0 right-0 bg-stone-800/80 text-amber-100 p-2 flex justify-between items-center pointer-events-auto">
+      <div className="absolute bottom-0 left-0 right-0 bg-slate-800/80 text-blue-100 p-2 flex justify-between items-center pointer-events-auto">
         <div className="flex space-x-2">
           <button 
             onClick={() => setShowBuildMenu(!showBuildMenu)}
-            className={`px-4 py-2 rounded font-medium ${showBuildMenu ? 'bg-amber-600' : 'bg-amber-700 hover:bg-amber-600'}`}
+            className={`px-4 py-2 rounded font-medium ${showBuildMenu ? 'bg-blue-600' : 'bg-blue-700 hover:bg-blue-600'}`}
           >
             {showBuildMenu ? 'Cancel Build' : 'Build'}
           </button>
@@ -193,15 +193,15 @@ export default function GameUI() {
       
       {/* Building menu */}
       {showBuildMenu && (
-        <div className="absolute bottom-16 left-0 bg-stone-800/90 text-amber-100 p-3 rounded-tr-lg max-h-[60vh] overflow-y-auto pointer-events-auto">
-          <h3 className="font-bold mb-3 text-amber-400">Buildings</h3>
+        <div className="absolute bottom-16 left-0 bg-slate-800/90 text-blue-100 p-3 rounded-tr-lg max-h-[60vh] overflow-y-auto pointer-events-auto">
+          <h3 className="font-bold mb-3 text-blue-400">Buildings</h3>
           <div className="grid grid-cols-1 gap-2 w-64">
             {availableBuildings.map(building => {
               const isSelected = selectedBuildingType === building.type;
-              const canAfford = resources.gold >= building.cost.gold &&
-                (!building.cost.wood || resources.wood >= building.cost.wood) &&
-                (!building.cost.stone || resources.stone >= building.cost.stone) &&
-                (!building.cost.iron || resources.iron >= building.cost.iron);
+              const canAfford = resources.data_tokens >= building.cost.data_tokens &&
+                (!building.cost.silicon || resources.silicon >= building.cost.silicon) &&
+                (!building.cost.hardware || resources.hardware >= building.cost.hardware) &&
+                (!building.cost.energy || resources.energy >= building.cost.energy);
               
               return (
                 <button
@@ -209,34 +209,34 @@ export default function GameUI() {
                   onClick={() => selectBuildingType(isSelected ? null : building.type)}
                   className={`text-left p-2 rounded border ${
                     isSelected 
-                      ? 'bg-amber-700 border-amber-500' 
+                      ? 'bg-blue-700 border-blue-500' 
                       : canAfford 
-                        ? 'bg-stone-700 border-stone-600 hover:bg-stone-600' 
-                        : 'bg-stone-700/50 border-stone-600 opacity-50 cursor-not-allowed'
+                        ? 'bg-slate-700 border-slate-600 hover:bg-slate-600' 
+                        : 'bg-slate-700/50 border-slate-600 opacity-50 cursor-not-allowed'
                   }`}
                   disabled={!canAfford}
                 >
                   <div className="font-medium">{building.name}</div>
-                  <div className="text-xs text-stone-300 mt-1">{building.description}</div>
+                  <div className="text-xs text-slate-300 mt-1">{building.description}</div>
                   <div className="text-xs mt-2 flex flex-wrap gap-1">
-                    {building.cost.gold > 0 && (
-                      <span className={`px-1 rounded ${resources.gold >= building.cost.gold ? 'bg-yellow-900/50' : 'bg-red-900/50'}`}>
-                        Gold: {building.cost.gold}
+                    {building.cost.data_tokens > 0 && (
+                      <span className={`px-1 rounded ${resources.data_tokens >= building.cost.data_tokens ? 'bg-yellow-900/50' : 'bg-red-900/50'}`}>
+                        Data: {building.cost.data_tokens}
                       </span>
                     )}
-                    {building.cost.wood && building.cost.wood > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.wood || resources.wood >= building.cost.wood ? 'bg-green-900/50' : 'bg-red-900/50'}`}>
-                        Wood: {building.cost.wood}
+                    {building.cost.silicon && building.cost.silicon > 0 && (
+                      <span className={`px-1 rounded ${!building.cost.silicon || resources.silicon >= building.cost.silicon ? 'bg-green-900/50' : 'bg-red-900/50'}`}>
+                        Silicon: {building.cost.silicon}
                       </span>
                     )}
-                    {building.cost.stone && building.cost.stone > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.stone || resources.stone >= building.cost.stone ? 'bg-gray-700/50' : 'bg-red-900/50'}`}>
-                        Stone: {building.cost.stone}
+                    {building.cost.hardware && building.cost.hardware > 0 && (
+                      <span className={`px-1 rounded ${!building.cost.hardware || resources.hardware >= building.cost.hardware ? 'bg-gray-700/50' : 'bg-red-900/50'}`}>
+                        Hardware: {building.cost.hardware}
                       </span>
                     )}
-                    {building.cost.iron && building.cost.iron > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.iron || resources.iron >= building.cost.iron ? 'bg-blue-900/50' : 'bg-red-900/50'}`}>
-                        Iron: {building.cost.iron}
+                    {building.cost.energy && building.cost.energy > 0 && (
+                      <span className={`px-1 rounded ${!building.cost.energy || resources.energy >= building.cost.energy ? 'bg-blue-900/50' : 'bg-red-900/50'}`}>
+                        Energy: {building.cost.energy}
                       </span>
                     )}
                   </div>
@@ -248,56 +248,75 @@ export default function GameUI() {
       )}
       
       {/* Selected building info */}
-      {selectedBuilding && (
-        <div className="absolute bottom-16 right-0 bg-stone-800/90 text-amber-100 p-3 rounded-tl-lg pointer-events-auto">
-          <h3 className="font-bold mb-2 text-amber-400">
+      {selectedBuilding && !showBuildMenu && (
+        <div className="absolute bottom-16 left-0 bg-slate-800/90 text-blue-100 p-3 rounded-tr-lg pointer-events-auto">
+          <h3 className="font-bold mb-2 text-blue-400">
             {BUILDINGS[selectedBuilding.type].name}
           </h3>
-          <p className="text-sm mb-2">{BUILDINGS[selectedBuilding.type].description}</p>
-          
-          {!selectedBuilding.isComplete && (
-            <div className="mb-2">
-              <div className="text-sm mb-1">Construction: {selectedBuilding.constructionProgress}%</div>
-              <div className="w-full h-2 bg-stone-700 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-amber-500" 
-                  style={{ width: `${selectedBuilding.constructionProgress}%` }}
-                ></div>
+          <div className="text-sm">
+            <p className="mb-2">{BUILDINGS[selectedBuilding.type].description}</p>
+            
+            {!selectedBuilding.isComplete && (
+              <div className="mt-2">
+                <div className="text-xs text-slate-300 mb-1">Construction Progress</div>
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div 
+                    className="bg-blue-500 h-2 rounded-full" 
+                    style={{ width: `${selectedBuilding.constructionProgress}%` }}
+                  ></div>
+                </div>
+                <div className="text-right text-xs mt-1">
+                  {selectedBuilding.constructionProgress}%
+                </div>
               </div>
-            </div>
-          )}
-          
-          {selectedBuilding.isComplete && BUILDINGS[selectedBuilding.type].income && (
-            <div className="text-sm text-green-300">
-              Income: +{BUILDINGS[selectedBuilding.type].income} gold per day
-            </div>
-          )}
-          
-          {selectedBuilding.isComplete && BUILDINGS[selectedBuilding.type].upkeep && (
-            <div className="text-sm text-red-300">
-              Upkeep: -{BUILDINGS[selectedBuilding.type].upkeep} gold per day
-            </div>
-          )}
-          
-          {selectedBuilding.isComplete && BUILDINGS[selectedBuilding.type].provides && (
-            <div className="mt-2">
-              <div className="text-sm font-medium">Provides:</div>
-              <div className="grid grid-cols-2 gap-x-4 text-xs mt-1">
-                {BUILDINGS[selectedBuilding.type].provides?.housing && (
-                  <div>Housing: +{BUILDINGS[selectedBuilding.type].provides.housing}</div>
+            )}
+            
+            {selectedBuilding.isComplete && (
+              <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
+                {BUILDINGS[selectedBuilding.type].income && (
+                  <div className="flex justify-between">
+                    <span>Income:</span>
+                    <span className="text-green-300">+{BUILDINGS[selectedBuilding.type].income}</span>
+                  </div>
                 )}
-                {BUILDINGS[selectedBuilding.type].provides?.happiness && (
-                  <div>Happiness: +{BUILDINGS[selectedBuilding.type].provides.happiness}%</div>
+                
+                {BUILDINGS[selectedBuilding.type].upkeep && (
+                  <div className="flex justify-between">
+                    <span>Upkeep:</span>
+                    <span className="text-red-300">-{BUILDINGS[selectedBuilding.type].upkeep}</span>
+                  </div>
                 )}
-                {BUILDINGS[selectedBuilding.type].provides?.defense && (
-                  <div>Defense: +{BUILDINGS[selectedBuilding.type].provides.defense}</div>
+                
+                {BUILDINGS[selectedBuilding.type].provides?.employees && (
+                  <div className="flex justify-between">
+                    <span>Employees:</span>
+                    <span>+{BUILDINGS[selectedBuilding.type].provides.employees}</span>
+                  </div>
                 )}
-                {BUILDINGS[selectedBuilding.type].provides?.food && (
-                  <div>Food: +{BUILDINGS[selectedBuilding.type].provides.food}</div>
+                
+                {BUILDINGS[selectedBuilding.type].provides?.satisfaction && (
+                  <div className="flex justify-between">
+                    <span>Satisfaction:</span>
+                    <span>+{BUILDINGS[selectedBuilding.type].provides.satisfaction}</span>
+                  </div>
+                )}
+                
+                {BUILDINGS[selectedBuilding.type].provides?.security && (
+                  <div className="flex justify-between">
+                    <span>Security:</span>
+                    <span>+{BUILDINGS[selectedBuilding.type].provides.security}</span>
+                  </div>
+                )}
+                
+                {BUILDINGS[selectedBuilding.type].provides?.computing_power && (
+                  <div className="flex justify-between">
+                    <span>Computing:</span>
+                    <span>+{BUILDINGS[selectedBuilding.type].provides.computing_power}</span>
+                  </div>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </div>

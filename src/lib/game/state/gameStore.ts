@@ -3,20 +3,21 @@ import { BuildingType } from '../models/buildings';
 import { TerrainType, TERRAIN } from '../models/terrain';
 
 export interface GameResources {
-  gold: number;
-  wood: number;
-  stone: number;
-  iron: number;
-  food: number;
+  data_tokens: number;
+  silicon: number;
+  hardware: number;
+  energy: number;
+  computing_power: number;
 }
 
 export interface GameStats {
-  population: number;
-  populationCapacity: number;
-  happiness: number;
-  defense: number;
+  employees: number;
+  employeeCapacity: number;
+  satisfaction: number;
+  security: number;
   income: number;
   upkeep: number;
+  processing_power: number;
 }
 
 export interface PlacedBuilding {
@@ -38,7 +39,7 @@ export interface MapTile {
 export interface GameState {
   // Game meta
   playerName: string;
-  kingdomName: string;
+  companyName: string;
   day: number;
   level: number;
   experience: number;
@@ -60,7 +61,7 @@ export interface GameState {
   cameraZoom: number;
   
   // Game actions
-  initializeGame: (playerName: string, kingdomName: string) => void;
+  initializeGame: (playerName: string, companyName: string) => void;
   advanceDay: () => void;
   addResources: (resources: Partial<GameResources>) => void;
   placeBuilding: (type: BuildingType, position: { x: number; z: number }, rotation: number) => void;
@@ -78,24 +79,24 @@ const generateRandomMap = (width: number, height: number): MapTile[][] => {
   for (let x = 0; x < width; x++) {
     map[x] = [];
     for (let z = 0; z < height; z++) {
-      // Generate random terrain with bias towards grass
+      // Generate random terrain with bias towards campus lawn
       let terrain: TerrainType;
       const rand = Math.random();
       
       if (rand < 0.6) {
-        terrain = TerrainType.GRASS;
+        terrain = TerrainType.CAMPUS_LAWN;
       } else if (rand < 0.7) {
-        terrain = TerrainType.DIRT;
+        terrain = TerrainType.CONCRETE;
       } else if (rand < 0.8) {
-        terrain = TerrainType.FOREST;
+        terrain = TerrainType.TECH_PARK;
       } else if (rand < 0.85) {
-        terrain = TerrainType.WATER;
+        terrain = TerrainType.LAKE;
       } else if (rand < 0.9) {
-        terrain = TerrainType.MOUNTAIN;
+        terrain = TerrainType.SILICON_HILLS;
       } else if (rand < 0.95) {
-        terrain = TerrainType.SAND;
+        terrain = TerrainType.SOLAR_FIELD;
       } else {
-        terrain = TerrainType.SNOW;
+        terrain = TerrainType.SERVER_FARM;
       }
       
       map[x][z] = {
@@ -106,19 +107,19 @@ const generateRandomMap = (width: number, height: number): MapTile[][] => {
     }
   }
   
-  // Add some roads
-  const roadCount = Math.floor(Math.min(width, height) / 2);
-  for (let i = 0; i < roadCount; i++) {
+  // Add some fiber optic networks
+  const networkCount = Math.floor(Math.min(width, height) / 2);
+  for (let i = 0; i < networkCount; i++) {
     const isHorizontal = Math.random() > 0.5;
     const pos = Math.floor(Math.random() * (isHorizontal ? height : width));
     
     if (isHorizontal) {
       for (let x = 0; x < width; x++) {
-        map[x][pos].terrain = TerrainType.ROAD;
+        map[x][pos].terrain = TerrainType.FIBER_OPTIC;
       }
     } else {
       for (let z = 0; z < height; z++) {
-        map[pos][z].terrain = TerrainType.ROAD;
+        map[pos][z].terrain = TerrainType.FIBER_OPTIC;
       }
     }
   }
@@ -129,26 +130,27 @@ const generateRandomMap = (width: number, height: number): MapTile[][] => {
 export const useGameStore = create<GameState>((set, get) => ({
   // Initial state
   playerName: '',
-  kingdomName: '',
+  companyName: '',
   day: 1,
   level: 1,
   experience: 0,
   
   resources: {
-    gold: 1000,
-    wood: 200,
-    stone: 100,
-    iron: 50,
-    food: 500,
+    data_tokens: 1000,
+    silicon: 200,
+    hardware: 100,
+    energy: 50,
+    computing_power: 500,
   },
   
   stats: {
-    population: 10,
-    populationCapacity: 10,
-    happiness: 50,
-    defense: 10,
+    employees: 10,
+    employeeCapacity: 10,
+    satisfaction: 50,
+    security: 10,
     income: 10,
     upkeep: 5,
+    processing_power: 1,
   },
   
   mapSize: { width: 50, height: 50 },
@@ -162,19 +164,19 @@ export const useGameStore = create<GameState>((set, get) => ({
   cameraZoom: 10,
   
   // Game actions
-  initializeGame: (playerName, kingdomName) => {
+  initializeGame: (playerName, companyName) => {
     const mapSize = { width: 50, height: 50 };
     const map = generateRandomMap(mapSize.width, mapSize.height);
     
     set({
       playerName,
-      kingdomName,
+      companyName,
       map,
       buildings: [],
       day: 1,
     });
     
-    // Place initial castle at the center
+    // Place initial headquarters at the center
     const centerX = Math.floor(mapSize.width / 2);
     const centerZ = Math.floor(mapSize.height / 2);
     
@@ -182,18 +184,18 @@ export const useGameStore = create<GameState>((set, get) => ({
     for (let x = centerX - 2; x <= centerX + 2; x++) {
       for (let z = centerZ - 2; z <= centerZ + 2; z++) {
         if (x >= 0 && x < mapSize.width && z >= 0 && z < mapSize.height) {
-          map[x][z].terrain = TerrainType.GRASS;
+          map[x][z].terrain = TerrainType.CAMPUS_LAWN;
         }
       }
     }
     
-    // Place the castle
-    get().placeBuilding(BuildingType.CASTLE, { x: centerX, z: centerZ }, 0);
+    // Place the headquarters
+    get().placeBuilding(BuildingType.HEADQUARTERS, { x: centerX, z: centerZ }, 0);
     
-    // Complete the castle immediately
-    const castleId = get().buildings[0]?.id;
-    if (castleId) {
-      get().updateBuildingProgress(castleId, 100);
+    // Complete the headquarters immediately
+    const hqId = get().buildings[0]?.id;
+    if (hqId) {
+      get().updateBuildingProgress(hqId, 100);
     }
   },
   
@@ -207,8 +209,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     
     // Update resources
     const newResources = { ...resources };
-    newResources.gold += netIncome;
-    newResources.food -= stats.population; // Each person consumes 1 food per day
+    newResources.data_tokens += netIncome;
+    newResources.computing_power -= stats.employees; // Each employee consumes 1 computing power per day
     
     // Progress construction on buildings
     const updatedBuildings = buildings.map(building => {
@@ -229,11 +231,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       buildings: updatedBuildings,
     });
     
-    // Check for level up
+    // Check for level up - processing power increases with level
     if (day % 10 === 0) {
       set(state => ({
         level: state.level + 1,
         experience: 0,
+        stats: {
+          ...state.stats,
+          processing_power: state.level + 1, // Processing power equals level
+        }
       }));
     }
   },
@@ -253,23 +259,62 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
   
   placeBuilding: (type, position, rotation) => {
-    const { buildings, map, mapSize } = get();
-    const { x, z } = position;
+    const { buildings, map, resources } = get();
+    const { BUILDINGS } = require('../models/buildings');
     
-    // Check if position is valid
-    if (x < 0 || x >= mapSize.width || z < 0 || z >= mapSize.height) {
+    const buildingData = BUILDINGS[type];
+    
+    // Check if we have enough resources
+    if (
+      resources.data_tokens < buildingData.cost.data_tokens ||
+      (buildingData.cost.silicon && resources.silicon < buildingData.cost.silicon) ||
+      (buildingData.cost.hardware && resources.hardware < buildingData.cost.hardware) ||
+      (buildingData.cost.energy && resources.energy < buildingData.cost.energy)
+    ) {
+      console.log('Not enough resources to build');
       return;
     }
     
-    // Check if the tile is buildable
-    const tile = map[x][z];
-    if (!tile || tile.buildingId || !TERRAIN[tile.terrain].buildable) {
-      return;
+    // Check if the area is buildable
+    const { width, length } = buildingData.size;
+    for (let x = position.x; x < position.x + width; x++) {
+      for (let z = position.z; z < position.z + length; z++) {
+        // Check if out of bounds
+        if (x < 0 || x >= map.length || z < 0 || z >= map[0].length) {
+          console.log('Building out of bounds');
+          return;
+        }
+        
+        // Check if terrain is buildable
+        const tile = map[x][z];
+        if (!TERRAIN[tile.terrain].buildable) {
+          console.log('Terrain not buildable');
+          return;
+        }
+        
+        // Check if there's already a building
+        if (tile.buildingId) {
+          console.log('Tile already has a building');
+          return;
+        }
+      }
     }
     
-    // Create new building
+    // Deduct resources
+    set(state => ({
+      resources: {
+        ...state.resources,
+        data_tokens: state.resources.data_tokens - buildingData.cost.data_tokens,
+        silicon: state.resources.silicon - (buildingData.cost.silicon || 0),
+        hardware: state.resources.hardware - (buildingData.cost.hardware || 0),
+        energy: state.resources.energy - (buildingData.cost.energy || 0),
+      },
+    }));
+    
+    // Create building
+    const id = `building_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     const newBuilding: PlacedBuilding = {
-      id: `building_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+      id,
       type,
       position,
       rotation,
@@ -277,68 +322,131 @@ export const useGameStore = create<GameState>((set, get) => ({
       isComplete: false,
     };
     
-    // Update map tile with building reference
-    map[x][z].buildingId = newBuilding.id;
+    // Update map tiles
+    for (let x = position.x; x < position.x + width; x++) {
+      for (let z = position.z; z < position.z + length; z++) {
+        map[x][z].buildingId = id;
+      }
+    }
     
-    // Add building to state
+    // Add building to list
     set({
       buildings: [...buildings, newBuilding],
-      map,
     });
     
-    return newBuilding.id;
+    return id;
   },
   
   removeBuilding: (id) => {
     const { buildings, map } = get();
     const building = buildings.find(b => b.id === id);
     
-    if (!building) return;
-    
-    // Remove building reference from map
-    const { x, z } = building.position;
-    if (map[x] && map[x][z]) {
-      map[x][z].buildingId = undefined;
+    if (!building) {
+      console.log('Building not found');
+      return;
     }
     
-    // Remove building from state
+    // Don't allow removing the headquarters
+    if (building.type === BuildingType.HEADQUARTERS) {
+      console.log('Cannot remove headquarters');
+      return;
+    }
+    
+    // Remove building from map
+    const buildingData = require('../models/buildings').BUILDINGS[building.type];
+    const { width, length } = buildingData.size;
+    
+    for (let x = building.position.x; x < building.position.x + width; x++) {
+      for (let z = building.position.z; z < building.position.z + length; z++) {
+        if (x >= 0 && x < map.length && z >= 0 && z < map[0].length) {
+          map[x][z].buildingId = undefined;
+        }
+      }
+    }
+    
+    // Remove building from list
     set({
       buildings: buildings.filter(b => b.id !== id),
-      map,
-      selectedBuildingId: get().selectedBuildingId === id ? null : get().selectedBuildingId,
+      selectedBuildingId: null,
     });
   },
   
   updateBuildingProgress: (id, progress) => {
-    set(state => ({
-      buildings: state.buildings.map(building => 
-        building.id === id 
-          ? { 
-              ...building, 
-              constructionProgress: progress, 
-              isComplete: progress >= 100 
-            } 
-          : building
-      ),
-    }));
+    const { buildings } = get();
+    
+    set({
+      buildings: buildings.map(building => {
+        if (building.id === id) {
+          const isComplete = progress >= 100;
+          
+          // If building is newly completed, update stats
+          if (isComplete && !building.isComplete) {
+            const buildingData = require('../models/buildings').BUILDINGS[building.type];
+            
+            // Update stats based on building
+            set(state => {
+              const newStats = { ...state.stats };
+              
+              if (buildingData.provides) {
+                if (buildingData.provides.employees) {
+                  newStats.employeeCapacity += buildingData.provides.employees;
+                }
+                if (buildingData.provides.satisfaction) {
+                  newStats.satisfaction += buildingData.provides.satisfaction;
+                }
+                if (buildingData.provides.security) {
+                  newStats.security += buildingData.provides.security;
+                }
+                if (buildingData.provides.computing_power) {
+                  newStats.processing_power += buildingData.provides.computing_power;
+                }
+              }
+              
+              if (buildingData.income) {
+                newStats.income += buildingData.income;
+              }
+              
+              if (buildingData.upkeep) {
+                newStats.upkeep += buildingData.upkeep;
+              }
+              
+              return { stats: newStats };
+            });
+          }
+          
+          return {
+            ...building,
+            constructionProgress: progress,
+            isComplete,
+          };
+        }
+        return building;
+      }),
+    });
   },
   
   selectBuildingType: (type) => {
-    set({ selectedBuildingType: type });
+    set({
+      selectedBuildingType: type,
+      selectedBuildingId: null,
+    });
   },
   
   selectBuilding: (id) => {
-    set({ selectedBuildingId: id });
+    set({
+      selectedBuildingId: id,
+      selectedBuildingType: null,
+    });
   },
   
   updateCamera: (position, rotation, zoom) => {
     set(state => ({
-      cameraPosition: position 
-        ? { 
+      cameraPosition: position
+        ? {
             x: position.x !== undefined ? position.x : state.cameraPosition.x,
             y: position.y !== undefined ? position.y : state.cameraPosition.y,
             z: position.z !== undefined ? position.z : state.cameraPosition.z,
-          } 
+          }
         : state.cameraPosition,
       cameraRotation: rotation !== undefined ? rotation : state.cameraRotation,
       cameraZoom: zoom !== undefined ? zoom : state.cameraZoom,

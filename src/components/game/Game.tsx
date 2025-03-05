@@ -233,8 +233,8 @@ export default function Game() {
   const initializeGame = useGameStore(state => state.initializeGame);
   const updateCamera = useGameStore(state => state.updateCamera);
   
-  const handleStartGame = (playerName: string, kingdomName: string) => {
-    initializeGame(playerName, kingdomName);
+  const handleStartGame = (playerName: string, companyName: string) => {
+    initializeGame(playerName, companyName);
     
     // Ensure camera is properly positioned at game start
     updateCamera({ x: 25, y: 15, z: 35 });

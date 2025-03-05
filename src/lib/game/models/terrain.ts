@@ -1,12 +1,12 @@
 export enum TerrainType {
-  GRASS = 'grass',
-  DIRT = 'dirt',
-  WATER = 'water',
-  FOREST = 'forest',
-  MOUNTAIN = 'mountain',
-  SAND = 'sand',
-  SNOW = 'snow',
-  ROAD = 'road',
+  CAMPUS_LAWN = 'campus_lawn',
+  CONCRETE = 'concrete',
+  LAKE = 'lake',
+  TECH_PARK = 'tech_park',
+  SILICON_HILLS = 'silicon_hills',
+  SOLAR_FIELD = 'solar_field',
+  SERVER_FARM = 'server_farm',
+  FIBER_OPTIC = 'fiber_optic',
 }
 
 export interface TerrainData {
@@ -16,86 +16,86 @@ export interface TerrainData {
   buildable: boolean;
   movementCost: number;
   resourceYield?: {
-    wood?: number;
-    stone?: number;
-    food?: number;
-    gold?: number;
+    silicon?: number;
+    hardware?: number;
+    computing_power?: number;
+    data_tokens?: number;
   };
   color: string; // For simple rendering
 }
 
 export const TERRAIN: Record<TerrainType, TerrainData> = {
-  [TerrainType.GRASS]: {
-    type: TerrainType.GRASS,
-    name: 'Grass',
-    description: 'Flat grassland, perfect for building',
+  [TerrainType.CAMPUS_LAWN]: {
+    type: TerrainType.CAMPUS_LAWN,
+    name: 'Campus Lawn',
+    description: 'Flat green space, perfect for building tech campuses',
     buildable: true,
     movementCost: 1,
     resourceYield: {
-      food: 1,
+      computing_power: 1,
     },
     color: '#4CAF50',
   },
-  [TerrainType.DIRT]: {
-    type: TerrainType.DIRT,
-    name: 'Dirt',
-    description: 'Basic dirt terrain',
+  [TerrainType.CONCRETE]: {
+    type: TerrainType.CONCRETE,
+    name: 'Concrete',
+    description: 'Basic urban terrain',
     buildable: true,
     movementCost: 1,
     color: '#8B4513',
   },
-  [TerrainType.WATER]: {
-    type: TerrainType.WATER,
-    name: 'Water',
-    description: 'Water bodies like lakes and rivers',
+  [TerrainType.LAKE]: {
+    type: TerrainType.LAKE,
+    name: 'Lake',
+    description: 'Water bodies for cooling data centers',
     buildable: false,
     movementCost: 5,
     color: '#2196F3',
   },
-  [TerrainType.FOREST]: {
-    type: TerrainType.FOREST,
-    name: 'Forest',
-    description: 'Dense forest with trees',
+  [TerrainType.TECH_PARK]: {
+    type: TerrainType.TECH_PARK,
+    name: 'Tech Park',
+    description: 'Dense area with startup offices',
     buildable: false,
     movementCost: 2,
     resourceYield: {
-      wood: 3,
-      food: 1,
+      silicon: 3,
+      computing_power: 1,
     },
     color: '#1B5E20',
   },
-  [TerrainType.MOUNTAIN]: {
-    type: TerrainType.MOUNTAIN,
-    name: 'Mountain',
-    description: 'Tall mountains with resources',
+  [TerrainType.SILICON_HILLS]: {
+    type: TerrainType.SILICON_HILLS,
+    name: 'Silicon Hills',
+    description: 'Hills rich with silicon and resources',
     buildable: false,
     movementCost: 3,
     resourceYield: {
-      stone: 3,
-      gold: 1,
+      hardware: 3,
+      data_tokens: 1,
     },
     color: '#757575',
   },
-  [TerrainType.SAND]: {
-    type: TerrainType.SAND,
-    name: 'Sand',
-    description: 'Sandy terrain',
+  [TerrainType.SOLAR_FIELD]: {
+    type: TerrainType.SOLAR_FIELD,
+    name: 'Solar Field',
+    description: 'Area with solar panels for energy generation',
     buildable: true,
     movementCost: 2,
     color: '#FDD835',
   },
-  [TerrainType.SNOW]: {
-    type: TerrainType.SNOW,
-    name: 'Snow',
-    description: 'Snow-covered terrain',
+  [TerrainType.SERVER_FARM]: {
+    type: TerrainType.SERVER_FARM,
+    name: 'Server Farm',
+    description: 'Cold area ideal for server cooling',
     buildable: true,
     movementCost: 2,
     color: '#ECEFF1',
   },
-  [TerrainType.ROAD]: {
-    type: TerrainType.ROAD,
-    name: 'Road',
-    description: 'Paved road for faster movement',
+  [TerrainType.FIBER_OPTIC]: {
+    type: TerrainType.FIBER_OPTIC,
+    name: 'Fiber Optic Network',
+    description: 'High-speed network for faster data transfer',
     buildable: false,
     movementCost: 0.5,
     color: '#795548',

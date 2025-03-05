@@ -3,12 +3,12 @@
 import { useState } from 'react';
 
 interface StartScreenProps {
-  onStartGame: (playerName: string, kingdomName: string) => void;
+  onStartGame: (playerName: string, companyName: string) => void;
 }
 
 export default function StartScreen({ onStartGame }: StartScreenProps) {
   const [playerName, setPlayerName] = useState('');
-  const [kingdomName, setKingdomName] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,19 +19,19 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
       return;
     }
     
-    if (!kingdomName.trim()) {
-      setError('Please name your kingdom');
+    if (!companyName.trim()) {
+      setError('Please name your tech company');
       return;
     }
     
-    onStartGame(playerName, kingdomName);
+    onStartGame(playerName, companyName);
   };
   
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-stone-900 text-amber-100 p-4">
-      <div className="max-w-md w-full bg-stone-800 p-8 rounded-lg shadow-lg">
-        <h1 className="text-4xl font-bold mb-6 text-center text-amber-400">Medieval Tycoon</h1>
-        <p className="mb-8 text-center italic">Build your medieval kingdom and lead it to prosperity</p>
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 text-blue-100 p-4">
+      <div className="max-w-md w-full bg-slate-800 p-8 rounded-lg shadow-lg">
+        <h1 className="text-4xl font-bold mb-6 text-center text-blue-400">Silicon Valley Tycoon</h1>
+        <p className="mb-8 text-center italic">Build your tech empire and disrupt the industry</p>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -43,22 +43,22 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
               id="playerName"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              className="w-full px-4 py-2 bg-stone-700 rounded border border-stone-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-amber-100"
+              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-blue-100"
               placeholder="Enter your name"
             />
           </div>
           
           <div>
-            <label htmlFor="kingdomName" className="block mb-2 font-medium">
-              Kingdom Name
+            <label htmlFor="companyName" className="block mb-2 font-medium">
+              Company Name
             </label>
             <input
               type="text"
-              id="kingdomName"
-              value={kingdomName}
-              onChange={(e) => setKingdomName(e.target.value)}
-              className="w-full px-4 py-2 bg-stone-700 rounded border border-stone-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-amber-100"
-              placeholder="Name your kingdom"
+              id="companyName"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-blue-100"
+              placeholder="Name your tech company"
             />
           </div>
           
@@ -68,17 +68,16 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
           
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           >
-            Start Your Kingdom
+            Launch Your Startup
           </button>
         </form>
         
-        <div className="mt-8 text-center text-sm text-stone-400">
+        <div className="mt-8 text-center text-sm text-slate-400">
           <p>Use WASD or arrow keys to move around</p>
-          <p>Use Space to move up, Shift to move down</p>
-          <p>Left mouse button to rotate the camera</p>
-          <p>Right mouse button to pan the camera</p>
+          <p>Use Q to move up, E to move down</p>
+          <p>Right mouse button to rotate the camera</p>
           <p>Mouse wheel to zoom in/out</p>
           <p>Click on terrain to build structures</p>
         </div>
