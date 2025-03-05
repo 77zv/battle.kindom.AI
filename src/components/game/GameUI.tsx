@@ -41,7 +41,7 @@ export default function GameUI() {
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Top bar with resources */}
-      <div className="absolute top-0 left-0 right-0 bg-slate-800/80 text-amber-50 p-2 flex justify-between items-center pointer-events-auto">
+      <div className="absolute top-0 left-0 right-0 bg-stone-800/80 text-amber-50 p-2 flex justify-between items-center pointer-events-auto">
         <div className="flex items-center space-x-4">
           <div className="font-bold">Kingdom: {companyName}</div>
           <div>Level: {level}</div>
@@ -64,7 +64,7 @@ export default function GameUI() {
           
           <button 
             onClick={() => setShowControls(!showControls)}
-            className="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm"
+            className="px-2 py-1 bg-stone-700 hover:bg-stone-600 rounded text-sm"
           >
             {showControls ? 'Hide Controls' : 'Controls'}
           </button>
@@ -79,7 +79,7 @@ export default function GameUI() {
       
       {/* Controls help panel */}
       {showControls && (
-        <div className="absolute top-12 left-0 bg-slate-800/80 text-amber-50 p-3 rounded-br-lg pointer-events-auto">
+        <div className="absolute top-12 left-0 bg-stone-800/80 text-amber-50 p-3 rounded-br-lg pointer-events-auto">
           <h3 className="font-bold mb-2 text-amber-400">Controls</h3>
           <div className="text-sm space-y-1">
             <div className="flex items-center">
@@ -124,7 +124,7 @@ export default function GameUI() {
       
       {/* Resources panel */}
       {showResourcesMenu && (
-        <div className="absolute top-12 right-0 bg-slate-800/80 text-amber-50 p-3 rounded-bl-lg pointer-events-auto">
+        <div className="absolute top-12 right-0 bg-stone-800/80 text-amber-50 p-3 rounded-bl-lg pointer-events-auto">
           <h3 className="font-bold mb-2 text-amber-400">Resources</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
             <div className="flex justify-between">
@@ -172,7 +172,7 @@ export default function GameUI() {
       )}
       
       {/* Bottom bar with actions */}
-      <div className="absolute bottom-0 left-0 right-0 bg-slate-800/80 text-amber-50 p-2 flex justify-between items-center pointer-events-auto">
+      <div className="absolute bottom-0 left-0 right-0 bg-stone-800/80 text-amber-50 p-2 flex justify-between items-center pointer-events-auto">
         <div className="flex space-x-2">
           <button 
             onClick={() => setShowBuildMenu(!showBuildMenu)}
@@ -203,7 +203,7 @@ export default function GameUI() {
       
       {/* Building menu */}
       {showBuildMenu && (
-        <div className="absolute bottom-16 left-0 bg-slate-800/90 text-amber-50 p-3 rounded-tr-lg max-h-[60vh] overflow-y-auto pointer-events-auto">
+        <div className="absolute bottom-16 left-0 bg-stone-800/90 text-amber-50 p-3 rounded-tr-lg max-h-[60vh] overflow-y-auto pointer-events-auto">
           <h3 className="font-bold mb-3 text-amber-400">Buildings</h3>
           <div className="grid grid-cols-1 gap-2 w-64">
             {availableBuildings.map(building => {
@@ -220,8 +220,8 @@ export default function GameUI() {
                     isSelected 
                       ? 'bg-amber-600' 
                       : canAfford 
-                        ? 'bg-slate-700 hover:bg-slate-600' 
-                        : 'bg-slate-800 opacity-50 cursor-not-allowed'
+                        ? 'bg-stone-700 hover:bg-stone-600' 
+                        : 'bg-stone-800 opacity-50 cursor-not-allowed'
                   }`}
                   disabled={!canAfford}
                 >
@@ -253,7 +253,7 @@ export default function GameUI() {
       
       {/* Building details */}
       {selectedBuilding && (
-        <div className="absolute bottom-16 right-0 bg-slate-800/90 text-amber-50 p-3 rounded-tl-lg pointer-events-auto w-64">
+        <div className="absolute bottom-16 right-0 bg-stone-800/90 text-amber-50 p-3 rounded-tl-lg pointer-events-auto w-64">
           <h3 className="font-bold mb-2 text-amber-400">{BUILDINGS[selectedBuilding.type].name}</h3>
           <p className="text-sm">{BUILDINGS[selectedBuilding.type].description}</p>
           

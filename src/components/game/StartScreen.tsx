@@ -28,8 +28,8 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
   };
   
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 text-blue-100 p-4">
-      <div className="max-w-md w-full bg-slate-800 p-8 rounded-lg shadow-lg">
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-stone-900 text-amber-50 p-4">
+      <div className="max-w-md w-full bg-stone-800 p-8 rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold mb-6 text-center text-amber-400">Medieval Kingdom Tycoon</h1>
         <p className="mb-8 text-center italic">Build your medieval empire and rule the realm</p>
         
@@ -43,7 +43,7 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
               id="playerName"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-blue-100"
+              className="w-full px-4 py-2 bg-stone-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-amber-50"
               placeholder="Enter your name, noble ruler"
             />
           </div>
@@ -57,7 +57,7 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
               id="companyName"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-blue-100"
+              className="w-full px-4 py-2 bg-stone-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-amber-50"
               placeholder="Name your medieval kingdom"
             />
           </div>
