@@ -56,8 +56,8 @@ export interface BuildingData {
 export const BUILDINGS: Record<BuildingType, BuildingData> = {
   [BuildingType.HEADQUARTERS]: {
     type: BuildingType.HEADQUARTERS,
-    name: 'Corporate Headquarters',
-    description: 'The center of your tech empire',
+    name: 'Startup Incubator',
+    description: 'The humble beginnings of your tech empire. Upgrades to a full company HQ as you grow.',
     cost: {
       data_tokens: 1000,
       hardware: 500,

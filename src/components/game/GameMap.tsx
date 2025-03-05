@@ -15,8 +15,12 @@ export default function GameMap() {
   const selectedBuildingType = useGameStore(state => state.selectedBuildingType);
   const placeBuilding = useGameStore(state => state.placeBuilding);
   
+  // Debug: Log buildings whenever they change
+  console.log(`GameMap rendering with ${buildings.length} buildings:`, buildings);
+  
   // Memoize terrain tiles to avoid unnecessary re-renders
   const terrainTiles = useMemo(() => {
+    console.log(`Generating terrain tiles for map with dimensions: ${map.length}x${map[0]?.length}`);
     return map.flatMap((column, x) =>
       column.map((tile, z) => (
         <TerrainTile
@@ -37,14 +41,18 @@ export default function GameMap() {
   
   // Render buildings
   const buildingModels = useMemo(() => {
-    return buildings.map(building => (
-      <BuildingModel
-        key={building.id}
-        building={building}
-        isSelected={building.id === selectedBuildingId}
-        onClick={() => selectBuilding(building.id)}
-      />
-    ));
+    console.log(`Generating building models for ${buildings.length} buildings`);
+    return buildings.map(building => {
+      console.log(`Rendering building: ${building.type} at (${building.position.x}, ${building.position.z})`);
+      return (
+        <BuildingModel
+          key={building.id}
+          building={building}
+          isSelected={building.id === selectedBuildingId}
+          onClick={() => selectBuilding(building.id)}
+        />
+      );
+    });
   }, [buildings, selectedBuildingId, selectBuilding]);
   
   return (

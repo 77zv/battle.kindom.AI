@@ -13,8 +13,10 @@ interface BuildingModelProps {
 export default function BuildingModel({ building, isSelected, onClick }: BuildingModelProps) {
   const [hovered, setHovered] = useState(false);
   
-  const { type, position, rotation, constructionProgress, isComplete } = building;
+  const { type, position, rotation } = building;
   const buildingData = BUILDINGS[type];
+  
+  console.log(`BuildingModel rendering: ${type} at position (${position.x}, ${position.z}), rotation: ${rotation}`);
   
   // Get building dimensions
   const { width, length } = buildingData.size;
@@ -22,63 +24,59 @@ export default function BuildingModel({ building, isSelected, onClick }: Buildin
   // Calculate building height based on type
   const getHeight = () => {
     switch (type) {
-      case BuildingType.CASTLE:
+      case BuildingType.HEADQUARTERS:
         return 2.5;
-      case BuildingType.TOWER:
-        return 3;
-      case BuildingType.CHURCH:
+      case BuildingType.DATA_CENTER:
+        return 2.0;
+      case BuildingType.RESEARCH_LAB:
+        return 1.8;
+      case BuildingType.SERVER_TOWER:
+        return 3.0;
+      case BuildingType.INNOVATION_CENTER:
         return 2.2;
-      case BuildingType.BARRACKS:
-      case BuildingType.BLACKSMITH:
-      case BuildingType.MARKET:
-      case BuildingType.TAVERN:
-        return 1.5;
       default:
-        return 1;
+        return 1.5;
     }
   };
   
   const height = getHeight();
+  console.log(`Building height: ${height}, dimensions: ${width}x${length}`);
   
   // Get building color based on type
   const getColor = () => {
     switch (type) {
-      case BuildingType.CASTLE:
-        return '#9E9E9E'; // Gray stone
-      case BuildingType.HOUSE:
-        return '#8D6E63'; // Brown wood
-      case BuildingType.FARM:
-        return '#A5D6A7'; // Light green
-      case BuildingType.BLACKSMITH:
-        return '#5D4037'; // Dark brown
-      case BuildingType.MARKET:
-        return '#FFCC80'; // Light orange
-      case BuildingType.TAVERN:
-        return '#D7CCC8'; // Light brown
-      case BuildingType.CHURCH:
-        return '#EEEEEE'; // Off-white
-      case BuildingType.BARRACKS:
-        return '#78909C'; // Blue-gray
-      case BuildingType.WALL:
-      case BuildingType.TOWER:
-        return '#BDBDBD'; // Light gray
-      case BuildingType.MINE:
-        return '#616161'; // Dark gray
-      case BuildingType.MILL:
-        return '#BCAAA4'; // Taupe
-      case BuildingType.STABLE:
+      case BuildingType.HEADQUARTERS:
+        return '#2196F3'; // Blue for startup incubator
+      case BuildingType.OFFICE:
+        return '#90CAF9'; // Light blue
+      case BuildingType.DATA_CENTER:
+        return '#4CAF50'; // Green
+      case BuildingType.RESEARCH_LAB:
+        return '#9C27B0'; // Purple
+      case BuildingType.TECH_HUB:
+        return '#00BCD4'; // Cyan
+      case BuildingType.CAFETERIA:
+        return '#FF9800'; // Orange
+      case BuildingType.INNOVATION_CENTER:
+        return '#E91E63'; // Pink
+      case BuildingType.NETWORKING_EVENT:
+        return '#FFEB3B'; // Yellow
+      case BuildingType.FIREWALL:
+        return '#F44336'; // Red
+      case BuildingType.SERVER_TOWER:
+        return '#607D8B'; // Blue-gray
+      case BuildingType.DATA_MINE:
         return '#795548'; // Brown
+      case BuildingType.CLOUD_STORAGE:
+        return '#9E9E9E'; // Gray
+      case BuildingType.TESLA_GIGAFACTORY:
+        return '#212121'; // Dark gray
       default:
         return '#FFFFFF'; // White
     }
   };
   
   const color = getColor();
-  
-  // Calculate construction progress visual effect
-  const constructionHeight = useMemo(() => {
-    return isComplete ? height : (height * (constructionProgress / 100));
-  }, [height, constructionProgress, isComplete]);
   
   return (
     <group
@@ -96,63 +94,58 @@ export default function BuildingModel({ building, isSelected, onClick }: Buildin
     >
       {/* Base building */}
       <mesh
-        position={[0, constructionHeight / 2, 0]}
+        position={[0, height / 2, 0]}
         castShadow
         receiveShadow
       >
-        <boxGeometry args={[width * 0.9, constructionHeight, length * 0.9]} />
+        <boxGeometry args={[width * 0.9, height, length * 0.9]} />
         <meshStandardMaterial 
           color={hovered ? '#FFFFFF' : color} 
           emissive={isSelected ? '#FFD700' : (hovered ? '#FFEB3B' : '#000000')}
           emissiveIntensity={isSelected ? 0.5 : (hovered ? 0.3 : 0)}
-          wireframe={!isComplete}
         />
       </mesh>
       
-      {/* Roof for completed buildings */}
-      {isComplete && (
-        <mesh
-          position={[0, height, 0]}
-          castShadow
-        >
-          {type === BuildingType.CHURCH ? (
-            <coneGeometry args={[Math.min(width, length) * 0.5, 1, 4]} />
-          ) : (
-            <coneGeometry args={[Math.max(width, length) * 0.5, height * 0.5, 4]} />
-          )}
-          <meshStandardMaterial color="#B71C1C" /> {/* Red roof */}
-        </mesh>
-      )}
+      {/* Roof */}
+      <mesh
+        position={[0, height, 0]}
+        castShadow
+      >
+        {type === BuildingType.RESEARCH_LAB ? (
+          <coneGeometry args={[Math.min(width, length) * 0.5, 1, 4]} />
+        ) : (
+          <boxGeometry args={[width * 0.95, height * 0.2, length * 0.95]} />
+        )}
+        <meshStandardMaterial color="#424242" /> {/* Modern dark roof */}
+      </mesh>
       
-      {/* Special features for certain buildings */}
-      {isComplete && type === BuildingType.CASTLE && (
+      {/* Special features for headquarters (startup incubator) */}
+      {type === BuildingType.HEADQUARTERS && (
         <>
-          {/* Castle towers */}
-          {[
-            [width * 0.4, height * 0.8, length * 0.4],
-            [width * 0.4, height * 0.8, -length * 0.4],
-            [-width * 0.4, height * 0.8, length * 0.4],
-            [-width * 0.4, height * 0.8, -length * 0.4],
-          ].map((pos, i) => (
-            <mesh key={i} position={pos} castShadow>
-              <cylinderGeometry args={[0.2, 0.3, 1, 8]} />
-              <meshStandardMaterial color="#757575" />
-            </mesh>
-          ))}
-        </>
-      )}
-      
-      {/* Construction progress indicator */}
-      {!isComplete && (
-        <mesh position={[0, height * 1.2, 0]}>
-          <boxGeometry args={[width, 0.1, 0.1]} />
-          <meshBasicMaterial color="#FF5252" />
-          
-          <mesh position={[-width / 2 + (width * constructionProgress / 100) / 2, 0, 0]}>
-            <boxGeometry args={[width * constructionProgress / 100, 0.1, 0.1]} />
-            <meshBasicMaterial color="#4CAF50" />
+          {/* Glass windows */}
+          <mesh position={[0, height * 0.6, length * 0.46]} castShadow>
+            <boxGeometry args={[width * 0.7, height * 0.5, 0.1]} />
+            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
           </mesh>
-        </mesh>
+          <mesh position={[0, height * 0.6, -length * 0.46]} castShadow>
+            <boxGeometry args={[width * 0.7, height * 0.5, 0.1]} />
+            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+          </mesh>
+          <mesh position={[width * 0.46, height * 0.6, 0]} castShadow>
+            <boxGeometry args={[0.1, height * 0.5, length * 0.7]} />
+            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+          </mesh>
+          <mesh position={[-width * 0.46, height * 0.6, 0]} castShadow>
+            <boxGeometry args={[0.1, height * 0.5, length * 0.7]} />
+            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+          </mesh>
+          
+          {/* Startup logo/sign */}
+          <mesh position={[0, height * 1.2, 0]} castShadow>
+            <boxGeometry args={[width * 0.4, 0.3, 0.1]} />
+            <meshStandardMaterial color="#FF4081" />
+          </mesh>
+        </>
       )}
     </group>
   );

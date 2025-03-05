@@ -11,7 +11,6 @@ export default function GameUI() {
   
   const playerName = useGameStore(state => state.playerName);
   const companyName = useGameStore(state => state.companyName);
-  const day = useGameStore(state => state.day);
   const level = useGameStore(state => state.level);
   const resources = useGameStore(state => state.resources);
   const stats = useGameStore(state => state.stats);
@@ -21,7 +20,7 @@ export default function GameUI() {
   
   const selectBuildingType = useGameStore(state => state.selectBuildingType);
   const removeBuilding = useGameStore(state => state.removeBuilding);
-  const advanceDay = useGameStore(state => state.advanceDay);
+  const collectResources = useGameStore(state => state.collectResources);
   
   // Get selected building
   const selectedBuilding = selectedBuildingId 
@@ -39,7 +38,6 @@ export default function GameUI() {
       <div className="absolute top-0 left-0 right-0 bg-slate-800/80 text-blue-100 p-2 flex justify-between items-center pointer-events-auto">
         <div className="flex items-center space-x-4">
           <div className="font-bold">{companyName}</div>
-          <div>Day: {day}</div>
           <div>Level: {level}</div>
         </div>
         
@@ -183,10 +181,10 @@ export default function GameUI() {
         
         <div>
           <button 
-            onClick={advanceDay}
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 rounded font-medium"
+            onClick={collectResources}
+            className="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded font-medium"
           >
-            Next Day
+            Collect Resources
           </button>
         </div>
       </div>
@@ -198,46 +196,48 @@ export default function GameUI() {
           <div className="grid grid-cols-1 gap-2 w-64">
             {availableBuildings.map(building => {
               const isSelected = selectedBuildingType === building.type;
-              const canAfford = resources.data_tokens >= building.cost.data_tokens &&
-                (!building.cost.silicon || resources.silicon >= building.cost.silicon) &&
-                (!building.cost.hardware || resources.hardware >= building.cost.hardware) &&
-                (!building.cost.energy || resources.energy >= building.cost.energy);
+              const canAfford = 
+                resources.data_tokens >= building.cost.data_tokens &&
+                resources.silicon >= (building.cost.silicon || 0) &&
+                resources.hardware >= (building.cost.hardware || 0) &&
+                resources.energy >= (building.cost.energy || 0);
               
               return (
                 <button
                   key={building.type}
                   onClick={() => selectBuildingType(isSelected ? null : building.type)}
-                  className={`text-left p-2 rounded border ${
+                  className={`p-2 text-left rounded transition-colors ${
                     isSelected 
-                      ? 'bg-blue-700 border-blue-500' 
+                      ? 'bg-blue-600' 
                       : canAfford 
-                        ? 'bg-slate-700 border-slate-600 hover:bg-slate-600' 
-                        : 'bg-slate-700/50 border-slate-600 opacity-50 cursor-not-allowed'
+                        ? 'bg-slate-700 hover:bg-slate-600' 
+                        : 'bg-slate-800 opacity-50 cursor-not-allowed'
                   }`}
                   disabled={!canAfford}
                 >
                   <div className="font-medium">{building.name}</div>
-                  <div className="text-xs text-slate-300 mt-1">{building.description}</div>
-                  <div className="text-xs mt-2 flex flex-wrap gap-1">
+                  <div className="text-xs text-blue-200 mt-1">{building.description}</div>
+                  
+                  <div className="mt-2 text-xs grid grid-cols-2 gap-x-2">
                     {building.cost.data_tokens > 0 && (
-                      <span className={`px-1 rounded ${resources.data_tokens >= building.cost.data_tokens ? 'bg-yellow-900/50' : 'bg-red-900/50'}`}>
+                      <div className={resources.data_tokens >= building.cost.data_tokens ? 'text-yellow-300' : 'text-red-400'}>
                         Data: {building.cost.data_tokens}
-                      </span>
+                      </div>
                     )}
-                    {building.cost.silicon && building.cost.silicon > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.silicon || resources.silicon >= building.cost.silicon ? 'bg-green-900/50' : 'bg-red-900/50'}`}>
+                    {building.cost.silicon > 0 && (
+                      <div className={resources.silicon >= building.cost.silicon ? 'text-green-300' : 'text-red-400'}>
                         Silicon: {building.cost.silicon}
-                      </span>
+                      </div>
                     )}
-                    {building.cost.hardware && building.cost.hardware > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.hardware || resources.hardware >= building.cost.hardware ? 'bg-gray-700/50' : 'bg-red-900/50'}`}>
+                    {building.cost.hardware > 0 && (
+                      <div className={resources.hardware >= building.cost.hardware ? 'text-gray-300' : 'text-red-400'}>
                         Hardware: {building.cost.hardware}
-                      </span>
+                      </div>
                     )}
-                    {building.cost.energy && building.cost.energy > 0 && (
-                      <span className={`px-1 rounded ${!building.cost.energy || resources.energy >= building.cost.energy ? 'bg-blue-900/50' : 'bg-red-900/50'}`}>
+                    {building.cost.energy > 0 && (
+                      <div className={resources.energy >= building.cost.energy ? 'text-blue-300' : 'text-red-400'}>
                         Energy: {building.cost.energy}
-                      </span>
+                      </div>
                     )}
                   </div>
                 </button>
@@ -248,75 +248,55 @@ export default function GameUI() {
       )}
       
       {/* Selected building info */}
-      {selectedBuilding && !showBuildMenu && (
-        <div className="absolute bottom-16 left-0 bg-slate-800/90 text-blue-100 p-3 rounded-tr-lg pointer-events-auto">
+      {selectedBuilding && (
+        <div className="absolute bottom-16 right-0 bg-slate-800/90 text-blue-100 p-3 rounded-tl-lg pointer-events-auto w-64">
           <h3 className="font-bold mb-2 text-blue-400">
             {BUILDINGS[selectedBuilding.type].name}
           </h3>
-          <div className="text-sm">
-            <p className="mb-2">{BUILDINGS[selectedBuilding.type].description}</p>
-            
-            {!selectedBuilding.isComplete && (
-              <div className="mt-2">
-                <div className="text-xs text-slate-300 mb-1">Construction Progress</div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-blue-500 h-2 rounded-full" 
-                    style={{ width: `${selectedBuilding.constructionProgress}%` }}
-                  ></div>
-                </div>
-                <div className="text-right text-xs mt-1">
-                  {selectedBuilding.constructionProgress}%
-                </div>
-              </div>
-            )}
-            
-            {selectedBuilding.isComplete && (
-              <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
-                {BUILDINGS[selectedBuilding.type].income && (
-                  <div className="flex justify-between">
-                    <span>Income:</span>
-                    <span className="text-green-300">+{BUILDINGS[selectedBuilding.type].income}</span>
-                  </div>
+          <p className="text-sm mb-3">
+            {BUILDINGS[selectedBuilding.type].description}
+          </p>
+          
+          {BUILDINGS[selectedBuilding.type].provides && (
+            <div className="text-xs">
+              <h4 className="font-medium text-blue-300 mb-1">Provides:</h4>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                {BUILDINGS[selectedBuilding.type].provides.employees && (
+                  <div>Employees: +{BUILDINGS[selectedBuilding.type].provides.employees}</div>
                 )}
-                
-                {BUILDINGS[selectedBuilding.type].upkeep && (
-                  <div className="flex justify-between">
-                    <span>Upkeep:</span>
-                    <span className="text-red-300">-{BUILDINGS[selectedBuilding.type].upkeep}</span>
-                  </div>
+                {BUILDINGS[selectedBuilding.type].provides.satisfaction && (
+                  <div>Satisfaction: +{BUILDINGS[selectedBuilding.type].provides.satisfaction}%</div>
                 )}
-                
-                {BUILDINGS[selectedBuilding.type].provides?.employees && (
-                  <div className="flex justify-between">
-                    <span>Employees:</span>
-                    <span>+{BUILDINGS[selectedBuilding.type].provides.employees}</span>
-                  </div>
+                {BUILDINGS[selectedBuilding.type].provides.security && (
+                  <div>Security: +{BUILDINGS[selectedBuilding.type].provides.security}</div>
                 )}
-                
-                {BUILDINGS[selectedBuilding.type].provides?.satisfaction && (
-                  <div className="flex justify-between">
-                    <span>Satisfaction:</span>
-                    <span>+{BUILDINGS[selectedBuilding.type].provides.satisfaction}</span>
-                  </div>
+                {BUILDINGS[selectedBuilding.type].provides.computing_power && (
+                  <div>Computing: +{BUILDINGS[selectedBuilding.type].provides.computing_power}</div>
                 )}
-                
-                {BUILDINGS[selectedBuilding.type].provides?.security && (
-                  <div className="flex justify-between">
-                    <span>Security:</span>
-                    <span>+{BUILDINGS[selectedBuilding.type].provides.security}</span>
-                  </div>
+                {BUILDINGS[selectedBuilding.type].provides.resources?.silicon && (
+                  <div className="text-green-300">Silicon: +{BUILDINGS[selectedBuilding.type].provides.resources.silicon}</div>
                 )}
-                
-                {BUILDINGS[selectedBuilding.type].provides?.computing_power && (
-                  <div className="flex justify-between">
-                    <span>Computing:</span>
-                    <span>+{BUILDINGS[selectedBuilding.type].provides.computing_power}</span>
-                  </div>
+                {BUILDINGS[selectedBuilding.type].provides.resources?.hardware && (
+                  <div className="text-gray-300">Hardware: +{BUILDINGS[selectedBuilding.type].provides.resources.hardware}</div>
+                )}
+                {BUILDINGS[selectedBuilding.type].provides.resources?.energy && (
+                  <div className="text-blue-300">Energy: +{BUILDINGS[selectedBuilding.type].provides.resources.energy}</div>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+          
+          {BUILDINGS[selectedBuilding.type].income > 0 && (
+            <div className="text-xs mt-2">
+              <span className="text-blue-300">Income:</span> <span className="text-green-300">+{BUILDINGS[selectedBuilding.type].income} data tokens</span>
+            </div>
+          )}
+          
+          {BUILDINGS[selectedBuilding.type].upkeep > 0 && (
+            <div className="text-xs mt-1">
+              <span className="text-blue-300">Upkeep:</span> <span className="text-red-300">-{BUILDINGS[selectedBuilding.type].upkeep} data tokens</span>
+            </div>
+          )}
         </div>
       )}
     </div>
