@@ -26,14 +26,14 @@ export default function BuildingModel({ building, isSelected, onClick }: Buildin
     switch (type) {
       case BuildingType.HEADQUARTERS:
         return 2.5;
-      case BuildingType.DATA_CENTER:
-        return 2.0;
-      case BuildingType.RESEARCH_LAB:
-        return 1.8;
-      case BuildingType.SERVER_TOWER:
+      case BuildingType.CASTLE:
         return 3.0;
-      case BuildingType.INNOVATION_CENTER:
+      case BuildingType.CHURCH:
         return 2.2;
+      case BuildingType.WATCHTOWER:
+        return 3.0;
+      case BuildingType.BARRACKS:
+        return 1.8;
       default:
         return 1.5;
     }
@@ -46,31 +46,31 @@ export default function BuildingModel({ building, isSelected, onClick }: Buildin
   const getColor = () => {
     switch (type) {
       case BuildingType.HEADQUARTERS:
-        return '#2196F3'; // Blue for startup incubator
-      case BuildingType.OFFICE:
-        return '#90CAF9'; // Light blue
-      case BuildingType.DATA_CENTER:
-        return '#4CAF50'; // Green
-      case BuildingType.RESEARCH_LAB:
-        return '#9C27B0'; // Purple
-      case BuildingType.TECH_HUB:
-        return '#00BCD4'; // Cyan
-      case BuildingType.CAFETERIA:
-        return '#FF9800'; // Orange
-      case BuildingType.INNOVATION_CENTER:
-        return '#E91E63'; // Pink
-      case BuildingType.NETWORKING_EVENT:
-        return '#FFEB3B'; // Yellow
-      case BuildingType.FIREWALL:
-        return '#F44336'; // Red
-      case BuildingType.SERVER_TOWER:
-        return '#607D8B'; // Blue-gray
-      case BuildingType.DATA_MINE:
-        return '#795548'; // Brown
-      case BuildingType.CLOUD_STORAGE:
-        return '#9E9E9E'; // Gray
-      case BuildingType.TESLA_GIGAFACTORY:
-        return '#212121'; // Dark gray
+        return '#8B4513'; // Brown for town hall
+      case BuildingType.HOUSE:
+        return '#A0522D'; // Sienna for wooden houses
+      case BuildingType.FARM:
+        return '#DAA520'; // Goldenrod for farms
+      case BuildingType.BLACKSMITH:
+        return '#696969'; // DimGray for blacksmith
+      case BuildingType.MARKET:
+        return '#CD853F'; // Peru for market
+      case BuildingType.TAVERN:
+        return '#B8860B'; // DarkGoldenrod for tavern
+      case BuildingType.CHURCH:
+        return '#F5F5DC'; // Beige for church
+      case BuildingType.BARRACKS:
+        return '#708090'; // SlateGray for barracks
+      case BuildingType.WALL:
+        return '#A9A9A9'; // DarkGray for wall
+      case BuildingType.WATCHTOWER:
+        return '#808080'; // Gray for watchtower
+      case BuildingType.MINE:
+        return '#4B0082'; // Indigo for mine
+      case BuildingType.STOREHOUSE:
+        return '#D2B48C'; // Tan for storehouse
+      case BuildingType.CASTLE:
+        return '#778899'; // LightSlateGray for castle
       default:
         return '#FFFFFF'; // White
     }
@@ -111,39 +111,43 @@ export default function BuildingModel({ building, isSelected, onClick }: Buildin
         position={[0, height, 0]}
         castShadow
       >
-        {type === BuildingType.RESEARCH_LAB ? (
+        {type === BuildingType.CHURCH ? (
           <coneGeometry args={[Math.min(width, length) * 0.5, 1, 4]} />
         ) : (
           <boxGeometry args={[width * 0.95, height * 0.2, length * 0.95]} />
         )}
-        <meshStandardMaterial color="#424242" /> {/* Modern dark roof */}
+        <meshStandardMaterial color="#8B4513" /> {/* Brown wooden roof */}
       </mesh>
       
-      {/* Special features for headquarters (startup incubator) */}
+      {/* Special features for headquarters (town hall) */}
       {type === BuildingType.HEADQUARTERS && (
         <>
-          {/* Glass windows */}
+          {/* Windows */}
           <mesh position={[0, height * 0.6, length * 0.46]} castShadow>
-            <boxGeometry args={[width * 0.7, height * 0.5, 0.1]} />
-            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+            <boxGeometry args={[width * 0.7, height * 0.3, 0.1]} />
+            <meshStandardMaterial color="#F5DEB3" /> {/* Wheat color for wooden windows */}
           </mesh>
           <mesh position={[0, height * 0.6, -length * 0.46]} castShadow>
-            <boxGeometry args={[width * 0.7, height * 0.5, 0.1]} />
-            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+            <boxGeometry args={[width * 0.7, height * 0.3, 0.1]} />
+            <meshStandardMaterial color="#F5DEB3" />
           </mesh>
           <mesh position={[width * 0.46, height * 0.6, 0]} castShadow>
-            <boxGeometry args={[0.1, height * 0.5, length * 0.7]} />
-            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+            <boxGeometry args={[0.1, height * 0.3, length * 0.7]} />
+            <meshStandardMaterial color="#F5DEB3" />
           </mesh>
           <mesh position={[-width * 0.46, height * 0.6, 0]} castShadow>
-            <boxGeometry args={[0.1, height * 0.5, length * 0.7]} />
-            <meshStandardMaterial color="#81D4FA" transparent opacity={0.7} />
+            <boxGeometry args={[0.1, height * 0.3, length * 0.7]} />
+            <meshStandardMaterial color="#F5DEB3" />
           </mesh>
           
-          {/* Startup logo/sign */}
-          <mesh position={[0, height * 1.2, 0]} castShadow>
-            <boxGeometry args={[width * 0.4, 0.3, 0.1]} />
-            <meshStandardMaterial color="#FF4081" />
+          {/* Town flag */}
+          <mesh position={[0, height * 1.5, 0]} castShadow>
+            <boxGeometry args={[0.1, 1, 0.1]} />
+            <meshStandardMaterial color="#8B4513" />
+          </mesh>
+          <mesh position={[0.3, height * 1.8, 0]} castShadow>
+            <boxGeometry args={[0.6, 0.4, 0.05]} />
+            <meshStandardMaterial color="#B22222" /> {/* FireBrick red for flag */}
           </mesh>
         </>
       )}

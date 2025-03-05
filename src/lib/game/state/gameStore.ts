@@ -3,13 +3,13 @@ import { BuildingType } from '../models/buildings';
 import { TerrainType, TERRAIN } from '../models/terrain';
 
 export interface GameResources {
-  cash: number;
-  data_tokens: number;
+  gold: number;
+  resources: number;
 }
 
 export interface GameStats {
-  employees: number;
-  employeeCapacity: number;
+  villagers: number;
+  villagerCapacity: number;
   satisfaction: number;
   security: number;
   income: number;
@@ -36,8 +36,8 @@ export interface GameState {
   playerName: string;
   companyName: string;
   level: number;
-  incubatorLevel: number;
-  cashPerSecond: number;
+  townHallLevel: number;
+  goldPerSecond: number;
   
   // Game resources and stats
   resources: GameResources;
@@ -64,9 +64,9 @@ export interface GameState {
   selectBuildingType: (type: BuildingType | null) => void;
   selectBuilding: (id: string | null) => void;
   updateCamera: (position?: Partial<{ x: number; y: number; z: number }>, rotation?: number, zoom?: number) => void;
-  upgradeIncubator: () => void;
-  startCashGeneration: () => void;
-  stopCashGeneration: () => void;
+  upgradeTownHall: () => void;
+  startGoldGeneration: () => void;
+  stopGoldGeneration: () => void;
 }
 
 // Helper function to generate a random map
@@ -76,24 +76,24 @@ const generateRandomMap = (width: number, height: number): MapTile[][] => {
   for (let x = 0; x < width; x++) {
     map[x] = [];
     for (let z = 0; z < height; z++) {
-      // Generate random terrain with bias towards campus lawn
+      // Generate random terrain with bias towards grassland
       let terrain: TerrainType;
       const rand = Math.random();
       
       if (rand < 0.6) {
-        terrain = TerrainType.CAMPUS_LAWN;
+        terrain = TerrainType.GRASSLAND;
       } else if (rand < 0.7) {
-        terrain = TerrainType.CONCRETE;
+        terrain = TerrainType.DIRT_ROAD;
       } else if (rand < 0.8) {
-        terrain = TerrainType.TECH_PARK;
+        terrain = TerrainType.FOREST;
       } else if (rand < 0.85) {
-        terrain = TerrainType.LAKE;
+        terrain = TerrainType.RIVER;
       } else if (rand < 0.9) {
-        terrain = TerrainType.SILICON_HILLS;
+        terrain = TerrainType.HILLS;
       } else if (rand < 0.95) {
-        terrain = TerrainType.SOLAR_FIELD;
+        terrain = TerrainType.FARMLAND;
       } else {
-        terrain = TerrainType.SERVER_FARM;
+        terrain = TerrainType.MOUNTAINS;
       }
       
       map[x][z] = {
@@ -104,19 +104,19 @@ const generateRandomMap = (width: number, height: number): MapTile[][] => {
     }
   }
   
-  // Add some fiber optic networks
-  const networkCount = Math.floor(Math.min(width, height) / 2);
-  for (let i = 0; i < networkCount; i++) {
+  // Add some stone paths
+  const pathCount = Math.floor(Math.min(width, height) / 2);
+  for (let i = 0; i < pathCount; i++) {
     const isHorizontal = Math.random() > 0.5;
     const pos = Math.floor(Math.random() * (isHorizontal ? height : width));
     
     if (isHorizontal) {
       for (let x = 0; x < width; x++) {
-        map[x][pos].terrain = TerrainType.FIBER_OPTIC;
+        map[x][pos].terrain = TerrainType.STONE_PATH;
       }
     } else {
       for (let z = 0; z < height; z++) {
-        map[pos][z].terrain = TerrainType.FIBER_OPTIC;
+        map[pos][z].terrain = TerrainType.STONE_PATH;
       }
     }
   }
@@ -129,17 +129,17 @@ export const useGameStore = create<GameState>((set, get) => ({
   playerName: '',
   companyName: '',
   level: 1,
-  incubatorLevel: 1,
-  cashPerSecond: 10, // Start with 10 cash per second
+  townHallLevel: 1,
+  goldPerSecond: 10, // Start with 10 gold per second
   
   resources: {
-    cash: 1000, // Start with 1000 cash
-    data_tokens: 5000,
+    gold: 1000, // Start with 1000 gold
+    resources: 5000,
   },
   
   stats: {
-    employees: 10,
-    employeeCapacity: 10,
+    villagers: 10,
+    villagerCapacity: 10,
     satisfaction: 50,
     security: 10,
     income: 10,
@@ -170,8 +170,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     for (let x = centerX - 2; x <= centerX + 2; x++) {
       for (let z = centerZ - 2; z <= centerZ + 2; z++) {
         if (x >= 0 && x < mapSize.width && z >= 0 && z < mapSize.height) {
-          map[x][z].terrain = TerrainType.CAMPUS_LAWN;
-          console.log(`Setting terrain at (${x}, ${z}) to CAMPUS_LAWN`);
+          map[x][z].terrain = TerrainType.GRASSLAND;
+          console.log(`Setting terrain at (${x}, ${z}) to GRASSLAND`);
         }
       }
     }
@@ -190,8 +190,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       const buildingId = get().placeBuilding(BuildingType.HEADQUARTERS, { x: centerX, z: centerZ }, 0);
       console.log(`Headquarters placed with ID: ${buildingId}`);
       
-      // Start generating cash
-      get().startCashGeneration();
+      // Start generating gold
+      get().startGoldGeneration();
     }, 100);
   },
   
@@ -199,19 +199,20 @@ export const useGameStore = create<GameState>((set, get) => ({
     const { resources, stats, buildings } = get();
     
     // Calculate resource generation from buildings
-    let dataTokensIncome = stats.income;
+    let resourcesIncome = stats.income;
     
     // Loop through all buildings to calculate resource generation
     buildings.forEach(building => {
       const buildingData = require('../models/buildings').BUILDINGS[building.type];
+      
       if (buildingData.income) {
-        dataTokensIncome += buildingData.income;
+        resourcesIncome += buildingData.income;
       }
     });
     
     // Update resources
     const newResources = { ...resources };
-    newResources.data_tokens += dataTokensIncome;
+    newResources.resources += resourcesIncome;
     
     set({
       resources: newResources,
@@ -224,9 +225,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (newLevel !== get().level) {
       set({
         level: newLevel,
-        stats: {
-          ...stats,
-        }
       });
     }
   },
@@ -253,8 +251,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     
     // Check if we have enough resources (skip check for headquarters as it's the starter building)
     if (type !== BuildingType.HEADQUARTERS && (
-      resources.cash < (buildingData.cost.cash || 0) ||
-      resources.data_tokens < (buildingData.cost.data_tokens || 0)
+      resources.gold < (buildingData.cost.cash || 0) ||
+      resources.resources < (buildingData.cost.data_tokens || 0)
     )) {
       console.log('Not enough resources');
       return;
@@ -289,8 +287,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     // Deduct resources (skip for headquarters)
     const newResources = { ...resources };
     if (type !== BuildingType.HEADQUARTERS) {
-      newResources.cash -= buildingData.cost.cash || 0;
-      newResources.data_tokens -= buildingData.cost.data_tokens || 0;
+      newResources.gold -= buildingData.cost.cash || 0;
+      newResources.resources -= buildingData.cost.data_tokens || 0;
     }
     
     // Generate unique ID
@@ -317,8 +315,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newStats = { ...get().stats };
     if (buildingData.provides) {
       if (buildingData.provides.employees) {
-        newStats.employees += buildingData.provides.employees;
-        newStats.employeeCapacity += buildingData.provides.employees;
+        newStats.villagers += buildingData.provides.employees;
+        newStats.villagerCapacity += buildingData.provides.employees;
       }
       
       if (buildingData.provides.satisfaction) {
@@ -379,8 +377,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newStats = { ...stats };
     if (buildingData.provides) {
       if (buildingData.provides.employees) {
-        newStats.employees -= buildingData.provides.employees;
-        newStats.employeeCapacity -= buildingData.provides.employees;
+        newStats.villagers -= buildingData.provides.employees;
+        newStats.villagerCapacity -= buildingData.provides.employees;
       }
       
       if (buildingData.provides.satisfaction) {
@@ -424,66 +422,66 @@ export const useGameStore = create<GameState>((set, get) => ({
     }));
   },
   
-  upgradeIncubator: () => {
-    const { incubatorLevel, resources } = get();
+  upgradeTownHall: () => {
+    const { townHallLevel, resources } = get();
     
     // Calculate upgrade cost based on current level
-    const upgradeCost = incubatorLevel * 1000;
+    const upgradeCost = townHallLevel * 1000;
     
-    // Check if player has enough cash
-    if (resources.cash < upgradeCost) {
-      console.log(`Not enough cash to upgrade incubator. Need ${upgradeCost}, have ${resources.cash}`);
+    // Check if player has enough gold
+    if (resources.gold < upgradeCost) {
+      console.log(`Not enough gold to upgrade town hall. Need ${upgradeCost}, have ${resources.gold}`);
       return false;
     }
     
-    // Deduct cash and increase level
+    // Deduct gold and increase level
     set(state => ({
       resources: {
         ...state.resources,
-        cash: state.resources.cash - upgradeCost
+        gold: state.resources.gold - upgradeCost
       },
-      incubatorLevel: state.incubatorLevel + 1,
-      cashPerSecond: state.cashPerSecond + 10 // Each level adds 10 cash per second
+      townHallLevel: state.townHallLevel + 1,
+      goldPerSecond: state.goldPerSecond + 10 // Each level adds 10 gold per second
     }));
     
-    console.log(`Upgraded incubator to level ${incubatorLevel + 1}`);
+    console.log(`Upgraded town hall to level ${townHallLevel + 1}`);
     return true;
   },
   
-  // Cash generation interval ID
-  _cashGenerationInterval: null as number | null,
+  // Gold generation interval ID
+  _goldGenerationInterval: null as number | null,
   
-  startCashGeneration: () => {
+  startGoldGeneration: () => {
     // Clear any existing interval
-    get().stopCashGeneration();
+    get().stopGoldGeneration();
     
-    // Start a new interval to generate cash every second
+    // Start a new interval to generate gold every second
     const intervalId = window.setInterval(() => {
-      const { cashPerSecond } = get();
+      const { goldPerSecond } = get();
       
       set(state => ({
         resources: {
           ...state.resources,
-          cash: state.resources.cash + cashPerSecond
+          gold: state.resources.gold + goldPerSecond
         }
       }));
       
-      console.log(`Generated ${cashPerSecond} cash`);
+      console.log(`Generated ${goldPerSecond} gold`);
     }, 1000);
     
     // Store the interval ID
-    set({ _cashGenerationInterval: intervalId as unknown as number });
+    set({ _goldGenerationInterval: intervalId as unknown as number });
     
-    console.log('Started cash generation');
+    console.log('Started gold generation');
   },
   
-  stopCashGeneration: () => {
-    const { _cashGenerationInterval } = get() as any;
+  stopGoldGeneration: () => {
+    const { _goldGenerationInterval } = get() as any;
     
-    if (_cashGenerationInterval) {
-      window.clearInterval(_cashGenerationInterval);
-      set({ _cashGenerationInterval: null });
-      console.log('Stopped cash generation');
+    if (_goldGenerationInterval) {
+      window.clearInterval(_goldGenerationInterval);
+      set({ _goldGenerationInterval: null });
+      console.log('Stopped gold generation');
     }
   },
 })); 

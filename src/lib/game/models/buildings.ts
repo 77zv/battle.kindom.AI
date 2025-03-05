@@ -1,17 +1,17 @@
 export enum BuildingType {
   HEADQUARTERS = 'headquarters',
-  OFFICE = 'office',
-  DATA_CENTER = 'data_center',
-  RESEARCH_LAB = 'research_lab',
-  TECH_HUB = 'tech_hub',
-  CAFETERIA = 'cafeteria',
-  INNOVATION_CENTER = 'innovation_center',
-  NETWORKING_EVENT = 'networking_event',
-  FIREWALL = 'firewall',
-  SERVER_TOWER = 'server_tower',
-  DATA_MINE = 'data_mine',
-  CLOUD_STORAGE = 'cloud_storage',
-  TESLA_GIGAFACTORY = 'tesla_gigafactory',
+  HOUSE = 'house',
+  FARM = 'farm',
+  BLACKSMITH = 'blacksmith',
+  MARKET = 'market',
+  TAVERN = 'tavern',
+  CHURCH = 'church',
+  BARRACKS = 'barracks',
+  WALL = 'wall',
+  WATCHTOWER = 'watchtower',
+  MINE = 'mine',
+  STOREHOUSE = 'storehouse',
+  CASTLE = 'castle',
 }
 
 export interface BuildingData {
@@ -43,8 +43,8 @@ export interface BuildingData {
 export const BUILDINGS: Record<BuildingType, BuildingData> = {
   [BuildingType.HEADQUARTERS]: {
     type: BuildingType.HEADQUARTERS,
-    name: 'Startup Incubator',
-    description: 'The humble beginnings of your tech empire. Upgrades to a full company HQ as you grow.',
+    name: 'Town Hall',
+    description: 'The center of your medieval town. Upgrades as your settlement grows.',
     cost: {
       cash: 0,
       data_tokens: 1000,
@@ -61,10 +61,10 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       security: 50,
     },
   },
-  [BuildingType.OFFICE]: {
-    type: BuildingType.OFFICE,
-    name: 'Open Office Space',
-    description: 'Basic workspace for your employees',
+  [BuildingType.HOUSE]: {
+    type: BuildingType.HOUSE,
+    name: 'Peasant House',
+    description: 'Basic housing for your villagers',
     cost: {
       cash: 500,
       data_tokens: 50,
@@ -79,10 +79,10 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       employees: 5,
     },
   },
-  [BuildingType.DATA_CENTER]: {
-    type: BuildingType.DATA_CENTER,
-    name: 'Data Center',
-    description: 'Processes data and increases computing power',
+  [BuildingType.FARM]: {
+    type: BuildingType.FARM,
+    name: 'Farm',
+    description: 'Produces food for your villagers',
     cost: {
       cash: 1000,
       data_tokens: 100,
@@ -97,10 +97,10 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     provides: {
     },
   },
-  [BuildingType.RESEARCH_LAB]: {
-    type: BuildingType.RESEARCH_LAB,
-    name: 'Research Lab',
-    description: 'Develops new technologies and algorithms',
+  [BuildingType.BLACKSMITH]: {
+    type: BuildingType.BLACKSMITH,
+    name: 'Blacksmith',
+    description: 'Crafts tools and weapons for your town',
     cost: {
       cash: 2000,
       data_tokens: 200,
@@ -116,13 +116,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       satisfaction: 5,
     },
     requires: {
-      buildings: [BuildingType.OFFICE],
+      buildings: [BuildingType.HOUSE],
     },
   },
-  [BuildingType.TECH_HUB]: {
-    type: BuildingType.TECH_HUB,
-    name: 'Tech Hub',
-    description: 'Exchange innovations and increase income',
+  [BuildingType.MARKET]: {
+    type: BuildingType.MARKET,
+    name: 'Market',
+    description: 'Trade goods and increase town income',
     cost: {
       cash: 3000,
       data_tokens: 300,
@@ -138,13 +138,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       satisfaction: 10,
     },
     requires: {
-      buildings: [BuildingType.OFFICE, BuildingType.DATA_CENTER],
+      buildings: [BuildingType.HOUSE, BuildingType.FARM],
     },
   },
-  [BuildingType.CAFETERIA]: {
-    type: BuildingType.CAFETERIA,
-    name: 'Gourmet Cafeteria',
-    description: 'Keeps your employees happy with free food',
+  [BuildingType.TAVERN]: {
+    type: BuildingType.TAVERN,
+    name: 'Tavern',
+    description: 'Keeps your villagers happy with food and drink',
     cost: {
       cash: 2500,
       data_tokens: 250,
@@ -160,13 +160,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       satisfaction: 15,
     },
     requires: {
-      buildings: [BuildingType.OFFICE],
+      buildings: [BuildingType.HOUSE],
     },
   },
-  [BuildingType.INNOVATION_CENTER]: {
-    type: BuildingType.INNOVATION_CENTER,
-    name: 'Innovation Center',
-    description: 'Fosters creativity and breakthrough ideas',
+  [BuildingType.CHURCH]: {
+    type: BuildingType.CHURCH,
+    name: 'Church',
+    description: 'Provides spiritual guidance and community gathering',
     cost: {
       cash: 5000,
       data_tokens: 400,
@@ -181,13 +181,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       satisfaction: 20,
     },
     requires: {
-      buildings: [BuildingType.OFFICE, BuildingType.TECH_HUB],
+      buildings: [BuildingType.HOUSE, BuildingType.MARKET],
     },
   },
-  [BuildingType.NETWORKING_EVENT]: {
-    type: BuildingType.NETWORKING_EVENT,
-    name: 'Networking Event Center',
-    description: 'Recruits and trains new talent for your company',
+  [BuildingType.BARRACKS]: {
+    type: BuildingType.BARRACKS,
+    name: 'Barracks',
+    description: 'Trains soldiers to defend your town',
     cost: {
       cash: 4000,
       data_tokens: 350,
@@ -203,13 +203,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       security: 30,
     },
     requires: {
-      buildings: [BuildingType.RESEARCH_LAB],
+      buildings: [BuildingType.BLACKSMITH],
     },
   },
-  [BuildingType.FIREWALL]: {
-    type: BuildingType.FIREWALL,
-    name: 'Firewall',
-    description: 'Protects your network from cyber attacks',
+  [BuildingType.WALL]: {
+    type: BuildingType.WALL,
+    name: 'Stone Wall',
+    description: 'Protects your town from invaders',
     cost: {
       cash: 1500,
       data_tokens: 100,
@@ -224,10 +224,10 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       security: 10,
     },
   },
-  [BuildingType.SERVER_TOWER]: {
-    type: BuildingType.SERVER_TOWER,
-    name: 'Server Tower',
-    description: 'Provides additional computing power and security',
+  [BuildingType.WATCHTOWER]: {
+    type: BuildingType.WATCHTOWER,
+    name: 'Watchtower',
+    description: 'Provides visibility and additional security',
     cost: {
       cash: 2000,
       data_tokens: 200,
@@ -242,10 +242,10 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
       security: 15,
     },
   },
-  [BuildingType.DATA_MINE]: {
-    type: BuildingType.DATA_MINE,
-    name: 'Data Mine',
-    description: 'Extracts valuable user data to generate Data Tokens',
+  [BuildingType.MINE]: {
+    type: BuildingType.MINE,
+    name: 'Mine',
+    description: 'Extracts valuable resources from the ground',
     cost: {
       cash: 3000,
       data_tokens: 300,
@@ -260,13 +260,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     provides: {
     },
     requires: {
-      buildings: [BuildingType.DATA_CENTER],
+      buildings: [BuildingType.FARM],
     },
   },
-  [BuildingType.CLOUD_STORAGE]: {
-    type: BuildingType.CLOUD_STORAGE,
-    name: 'Cloud Storage Facility',
-    description: 'Stores and processes large amounts of data',
+  [BuildingType.STOREHOUSE]: {
+    type: BuildingType.STOREHOUSE,
+    name: 'Storehouse',
+    description: 'Stores food and resources for your town',
     cost: {
       cash: 2500,
       data_tokens: 250,
@@ -280,13 +280,13 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     provides: {
     },
     requires: {
-      buildings: [BuildingType.DATA_CENTER],
+      buildings: [BuildingType.FARM],
     },
   },
-  [BuildingType.TESLA_GIGAFACTORY]: {
-    type: BuildingType.TESLA_GIGAFACTORY,
-    name: 'Tesla Gigafactory',
-    description: 'Massive production facility for hardware and energy',
+  [BuildingType.CASTLE]: {
+    type: BuildingType.CASTLE,
+    name: 'Castle',
+    description: 'Massive fortification and symbol of your power',
     cost: {
       cash: 10000,
       data_tokens: 500,
@@ -301,7 +301,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     provides: {
     },
     requires: {
-      buildings: [BuildingType.RESEARCH_LAB, BuildingType.DATA_MINE],
+      buildings: [BuildingType.BLACKSMITH, BuildingType.MINE],
     },
   },
 }; 

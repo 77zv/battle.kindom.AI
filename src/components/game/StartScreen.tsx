@@ -20,7 +20,7 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
     }
     
     if (!companyName.trim()) {
-      setError('Please name your tech company');
+      setError('Please name your kingdom');
       return;
     }
     
@@ -30,8 +30,8 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 text-blue-100 p-4">
       <div className="max-w-md w-full bg-slate-800 p-8 rounded-lg shadow-lg">
-        <h1 className="text-4xl font-bold mb-6 text-center text-blue-400">Silicon Valley Tycoon</h1>
-        <p className="mb-8 text-center italic">Build your tech empire and disrupt the industry</p>
+        <h1 className="text-4xl font-bold mb-6 text-center text-amber-400">Medieval Kingdom Tycoon</h1>
+        <p className="mb-8 text-center italic">Build your medieval empire and rule the realm</p>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -43,22 +43,22 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
               id="playerName"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-blue-100"
-              placeholder="Enter your name"
+              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-blue-100"
+              placeholder="Enter your name, noble ruler"
             />
           </div>
           
           <div>
             <label htmlFor="companyName" className="block mb-2 font-medium">
-              Company Name
+              Kingdom Name
             </label>
             <input
               type="text"
               id="companyName"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-blue-100"
-              placeholder="Name your tech company"
+              className="w-full px-4 py-2 bg-slate-700 rounded border border-slate-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-blue-100"
+              placeholder="Name your medieval kingdom"
             />
           </div>
           
@@ -68,9 +68,9 @@ export default function StartScreen({ onStartGame }: StartScreenProps) {
           
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50"
           >
-            Launch Your Startup
+            Begin Your Reign
           </button>
         </form>
         
