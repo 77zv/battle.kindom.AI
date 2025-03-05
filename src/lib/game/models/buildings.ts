@@ -19,7 +19,8 @@ export interface BuildingData {
   name: string;
   description: string;
   cost: {
-    data_tokens: number;
+    cash: number;
+    data_tokens?: number;
     silicon?: number;
     hardware?: number;
     energy?: number;
@@ -59,6 +60,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Startup Incubator',
     description: 'The humble beginnings of your tech empire. Upgrades to a full company HQ as you grow.',
     cost: {
+      cash: 0,
       data_tokens: 1000,
       hardware: 500,
       silicon: 300,
@@ -80,6 +82,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Open Office Space',
     description: 'Basic workspace for your employees',
     cost: {
+      cash: 500,
       data_tokens: 50,
       silicon: 20,
     },
@@ -98,6 +101,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Data Center',
     description: 'Processes data and increases computing power',
     cost: {
+      cash: 1000,
       data_tokens: 100,
       silicon: 30,
     },
@@ -117,6 +121,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Research Lab',
     description: 'Develops new technologies and algorithms',
     cost: {
+      cash: 2000,
       data_tokens: 200,
       silicon: 50,
       hardware: 30,
@@ -141,6 +146,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Tech Hub',
     description: 'Exchange innovations and increase income',
     cost: {
+      cash: 3000,
       data_tokens: 300,
       silicon: 100,
     },
@@ -163,6 +169,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Gourmet Cafeteria',
     description: 'Keeps your employees happy with free food',
     cost: {
+      cash: 2500,
       data_tokens: 250,
       silicon: 80,
     },
@@ -185,6 +192,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Innovation Center',
     description: 'Fosters creativity and breakthrough ideas',
     cost: {
+      cash: 5000,
       data_tokens: 400,
       hardware: 200,
       silicon: 100,
@@ -207,6 +215,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Networking Event Center',
     description: 'Recruits and trains new talent for your company',
     cost: {
+      cash: 4000,
       data_tokens: 350,
       silicon: 150,
       hardware: 50,
@@ -230,6 +239,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Firewall',
     description: 'Protects your network from cyber attacks',
     cost: {
+      cash: 1500,
       data_tokens: 100,
       hardware: 50,
     },
@@ -248,6 +258,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Server Tower',
     description: 'Provides additional computing power and security',
     cost: {
+      cash: 2000,
       data_tokens: 200,
       hardware: 100,
       energy: 30,
@@ -268,6 +279,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Data Mine',
     description: 'Extracts valuable user data to generate Data Tokens',
     cost: {
+      cash: 3000,
       data_tokens: 300,
       silicon: 100,
       energy: 50,
@@ -293,6 +305,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Cloud Storage Facility',
     description: 'Stores and processes large amounts of data',
     cost: {
+      cash: 2500,
       data_tokens: 250,
       hardware: 120,
       energy: 40,
@@ -316,6 +329,7 @@ export const BUILDINGS: Record<BuildingType, BuildingData> = {
     name: 'Tesla Gigafactory',
     description: 'Massive production facility for hardware and energy',
     cost: {
+      cash: 10000,
       data_tokens: 500,
       silicon: 200,
       hardware: 150,

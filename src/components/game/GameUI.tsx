@@ -12,6 +12,8 @@ export default function GameUI() {
   const playerName = useGameStore(state => state.playerName);
   const companyName = useGameStore(state => state.companyName);
   const level = useGameStore(state => state.level);
+  const incubatorLevel = useGameStore(state => state.incubatorLevel);
+  const cashPerSecond = useGameStore(state => state.cashPerSecond);
   const resources = useGameStore(state => state.resources);
   const stats = useGameStore(state => state.stats);
   const selectedBuildingType = useGameStore(state => state.selectedBuildingType);
@@ -21,6 +23,10 @@ export default function GameUI() {
   const selectBuildingType = useGameStore(state => state.selectBuildingType);
   const removeBuilding = useGameStore(state => state.removeBuilding);
   const collectResources = useGameStore(state => state.collectResources);
+  const upgradeIncubator = useGameStore(state => state.upgradeIncubator);
+  
+  // Calculate upgrade cost
+  const incubatorUpgradeCost = incubatorLevel * 1000;
   
   // Get selected building
   const selectedBuilding = selectedBuildingId 
@@ -39,9 +45,23 @@ export default function GameUI() {
         <div className="flex items-center space-x-4">
           <div className="font-bold">{companyName}</div>
           <div>Level: {level}</div>
+          <div className="text-green-400">Cash: ${resources.cash.toLocaleString()}</div>
+          <div className="text-green-300">+${cashPerSecond}/sec</div>
         </div>
         
         <div className="flex space-x-2">
+          <button 
+            onClick={() => upgradeIncubator()}
+            disabled={resources.cash < incubatorUpgradeCost}
+            className={`px-2 py-1 rounded text-sm ${
+              resources.cash >= incubatorUpgradeCost 
+                ? 'bg-amber-600 hover:bg-amber-500' 
+                : 'bg-gray-600 cursor-not-allowed'
+            }`}
+          >
+            Upgrade Incubator (Level {incubatorLevel}) - ${incubatorUpgradeCost.toLocaleString()}
+          </button>
+          
           <button 
             onClick={() => setShowControls(!showControls)}
             className="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm"
@@ -108,6 +128,14 @@ export default function GameUI() {
           <h3 className="font-bold mb-2 text-blue-400">Resources</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
             <div className="flex justify-between">
+              <span>Cash:</span>
+              <span className="text-green-400">${resources.cash.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Cash/sec:</span>
+              <span className="text-green-300">+${cashPerSecond}/sec</span>
+            </div>
+            <div className="flex justify-between">
               <span>Data Tokens:</span>
               <span className="text-yellow-300">{resources.data_tokens}</span>
             </div>
@@ -131,6 +159,10 @@ export default function GameUI() {
           
           <h3 className="font-bold mt-4 mb-2 text-blue-400">Company Stats</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+            <div className="flex justify-between">
+              <span>Incubator Level:</span>
+              <span className="text-amber-300">{incubatorLevel}</span>
+            </div>
             <div className="flex justify-between">
               <span>Employees:</span>
               <span>{stats.employees}/{stats.employeeCapacity}</span>
@@ -197,7 +229,8 @@ export default function GameUI() {
             {availableBuildings.map(building => {
               const isSelected = selectedBuildingType === building.type;
               const canAfford = 
-                resources.data_tokens >= building.cost.data_tokens &&
+                resources.cash >= (building.cost.cash || 0) &&
+                resources.data_tokens >= (building.cost.data_tokens || 0) &&
                 resources.silicon >= (building.cost.silicon || 0) &&
                 resources.hardware >= (building.cost.hardware || 0) &&
                 resources.energy >= (building.cost.energy || 0);
@@ -219,6 +252,15 @@ export default function GameUI() {
                   <div className="text-xs text-blue-200 mt-1">{building.description}</div>
                   
                   <div className="mt-2 text-xs grid grid-cols-2 gap-x-2">
+                    {building.cost.cash > 0 && (
+                      <div className="flex items-center">
+                        <span className="text-green-400 mr-1">$</span>
+                        <span className={resources.cash >= building.cost.cash ? 'text-white' : 'text-red-400'}>
+                          {building.cost.cash.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    
                     {building.cost.data_tokens > 0 && (
                       <div className={resources.data_tokens >= building.cost.data_tokens ? 'text-yellow-300' : 'text-red-400'}>
                         Data: {building.cost.data_tokens}

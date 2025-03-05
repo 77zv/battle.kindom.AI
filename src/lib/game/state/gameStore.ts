@@ -3,6 +3,7 @@ import { BuildingType } from '../models/buildings';
 import { TerrainType, TERRAIN } from '../models/terrain';
 
 export interface GameResources {
+  cash: number;
   data_tokens: number;
   silicon: number;
   hardware: number;
@@ -40,6 +41,8 @@ export interface GameState {
   playerName: string;
   companyName: string;
   level: number;
+  incubatorLevel: number;
+  cashPerSecond: number;
   
   // Game resources and stats
   resources: GameResources;
@@ -66,6 +69,9 @@ export interface GameState {
   selectBuildingType: (type: BuildingType | null) => void;
   selectBuilding: (id: string | null) => void;
   updateCamera: (position?: Partial<{ x: number; y: number; z: number }>, rotation?: number, zoom?: number) => void;
+  upgradeIncubator: () => void;
+  startCashGeneration: () => void;
+  stopCashGeneration: () => void;
 }
 
 // Helper function to generate a random map
@@ -128,8 +134,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   playerName: '',
   companyName: '',
   level: 1,
+  incubatorLevel: 1,
+  cashPerSecond: 10, // Start with 10 cash per second
   
   resources: {
+    cash: 1000, // Start with 1000 cash
     data_tokens: 5000,
     silicon: 1000,
     hardware: 500,
@@ -190,6 +199,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     setTimeout(() => {
       const buildingId = get().placeBuilding(BuildingType.HEADQUARTERS, { x: centerX, z: centerZ }, 0);
       console.log(`Headquarters placed with ID: ${buildingId}`);
+      
+      // Start generating cash
+      get().startCashGeneration();
     }, 100);
   },
   
@@ -271,6 +283,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     
     // Check if we have enough resources (skip check for headquarters as it's the starter building)
     if (type !== BuildingType.HEADQUARTERS && (
+      resources.cash < (buildingData.cost.cash || 0) ||
       resources.data_tokens < (buildingData.cost.data_tokens || 0) ||
       resources.silicon < (buildingData.cost.silicon || 0) ||
       resources.hardware < (buildingData.cost.hardware || 0) ||
@@ -309,6 +322,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     // Deduct resources (skip for headquarters)
     const newResources = { ...resources };
     if (type !== BuildingType.HEADQUARTERS) {
+      newResources.cash -= buildingData.cost.cash || 0;
       newResources.data_tokens -= buildingData.cost.data_tokens || 0;
       newResources.silicon -= buildingData.cost.silicon || 0;
       newResources.hardware -= buildingData.cost.hardware || 0;
@@ -444,5 +458,68 @@ export const useGameStore = create<GameState>((set, get) => ({
       cameraRotation: rotation !== undefined ? rotation : state.cameraRotation,
       cameraZoom: zoom !== undefined ? zoom : state.cameraZoom,
     }));
+  },
+  
+  upgradeIncubator: () => {
+    const { incubatorLevel, resources } = get();
+    
+    // Calculate upgrade cost based on current level
+    const upgradeCost = incubatorLevel * 1000;
+    
+    // Check if player has enough cash
+    if (resources.cash < upgradeCost) {
+      console.log(`Not enough cash to upgrade incubator. Need ${upgradeCost}, have ${resources.cash}`);
+      return false;
+    }
+    
+    // Deduct cash and increase level
+    set(state => ({
+      resources: {
+        ...state.resources,
+        cash: state.resources.cash - upgradeCost
+      },
+      incubatorLevel: state.incubatorLevel + 1,
+      cashPerSecond: state.cashPerSecond + 10 // Each level adds 10 cash per second
+    }));
+    
+    console.log(`Upgraded incubator to level ${incubatorLevel + 1}`);
+    return true;
+  },
+  
+  // Cash generation interval ID
+  _cashGenerationInterval: null as number | null,
+  
+  startCashGeneration: () => {
+    // Clear any existing interval
+    get().stopCashGeneration();
+    
+    // Start a new interval to generate cash every second
+    const intervalId = window.setInterval(() => {
+      const { cashPerSecond } = get();
+      
+      set(state => ({
+        resources: {
+          ...state.resources,
+          cash: state.resources.cash + cashPerSecond
+        }
+      }));
+      
+      console.log(`Generated ${cashPerSecond} cash`);
+    }, 1000);
+    
+    // Store the interval ID
+    set({ _cashGenerationInterval: intervalId as unknown as number });
+    
+    console.log('Started cash generation');
+  },
+  
+  stopCashGeneration: () => {
+    const { _cashGenerationInterval } = get() as any;
+    
+    if (_cashGenerationInterval) {
+      window.clearInterval(_cashGenerationInterval);
+      set({ _cashGenerationInterval: null });
+      console.log('Stopped cash generation');
+    }
   },
 })); 
